@@ -100,7 +100,6 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(() => {
     const initialOpen: Record<string, boolean> = {}
     Object.keys(toolCategories).forEach(key => {
@@ -109,23 +108,10 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
     return initialOpen
   })
 
+  // Initialize isCollapsed to false for desktop, it will be toggleable
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const checkMobile = () => window.innerWidth < 768
-      setIsMobile(checkMobile())
-      setIsCollapsed(false) // Desktop sidebar is always expanded by default now
-
-      const handleResize = () => {
-        setIsMobile(checkMobile())
-        if (!checkMobile()) {
-          setIsCollapsed(false) // Ensure desktop sidebar remains expanded
-        }
-      }
-
-      window.addEventListener("resize", handleResize)
-      return () => window.removeEventListener("resize", handleResize)
-    }
-  }, [])
+    setIsCollapsed(false);
+  }, []);
 
   const handleLogout = async () => {
     // Clear any local session
@@ -219,7 +205,7 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
 
         {Object.entries(toolCategories).map(([key, category]) => {
           const CategoryIcon = category.icon
-          const isActive = currentCategory === key || pathname.includes(`/tools/${key}`)
+          const isActive = pathname.includes(`/tools/${key}`)
           const isOpen = openCategories[key]
 
           return (
@@ -342,11 +328,11 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
                 <Button variant="ghost" className="w-full justify-start" onClick={handleLogout}>
                   <LogOut className="h-5 w-5" />
                   {!isCollapsed && <span className="ml-2 text-body">Sign Out</span>}
-                </Button>
-              </TooltipTrigger>
-              {isCollapsed && <TooltipContent side="right" className="text-body">Sign Out</TooltipContent>}
-            </Tooltip>
-          </TooltipProvider>
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            {isCollapsed && <TooltipContent side="right" className="text-body">Sign Out</TooltipContent>}
+          </Tooltip>
         </div>
       </div>
     </div>

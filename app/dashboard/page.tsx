@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Bot, MessageSquare, User, Send } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { MobileSidebarDrawer } from "@/components/mobile-sidebar-drawer"
 
 interface Message {
   id: number
@@ -62,15 +61,14 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-64px)] flex-col bg-background relative">
-      <MobileSidebarDrawer /> {/* Integrated MobileSidebarDrawer here */}
+    <div className="flex h-full flex-col bg-background relative">
       {/* Chat Message Area */}
       <ScrollArea className="flex-1 p-4 md:p-6 pb-24">
         <div className="flex flex-col space-y-4 max-w-3xl mx-auto">
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
               <Bot className="h-12 w-12 mb-4 text-primary" />
-              <h2 className="text-h2 font-bold mb-2">Start a new conversation</h2>
+              <h2 className="text-h2 font-bold mb-2">Start developing now.</h2>
               <p className="text-body">Ask me anything about your projects or tools.</p>
             </div>
           )}

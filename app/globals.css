@@ -29,7 +29,7 @@
   --chart-3: #666666;
   --chart-4: #444444;
   --chart-5: #222222;
-  --radius: 0rem; /* Sharp corners */
+  --radius: 0.75rem; /* Rounded corners for rounded-xl */
   --sidebar: #F9F9F9;
   --sidebar-foreground: #000000;
   --sidebar-primary: #A3A3A3;
