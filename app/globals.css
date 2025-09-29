@@ -159,4 +159,9 @@
   .text-sm {
     font-size: var(--font-size-sm); /* Adjust text-sm */
   }
+
+  /* Reduce opacity of placeholder text */
+  ::placeholder {
+    opacity: 0.5;
+  }
 }
