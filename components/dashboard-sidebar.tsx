@@ -1,6 +1,7 @@
 "use client"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
@@ -33,7 +34,10 @@ import {
   Lightbulb,
   HelpCircle,
   Building,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 const toolCategories = {
   "cloud-dev": {
@@ -89,6 +93,13 @@ interface DashboardSidebarProps {
 export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
+  const [isCollapsed, setIsCollapsed] = useState(false)
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsCollapsed(window.innerWidth < 768)
+    }
+  }, [])
 
   const handleLogout = async () => {
     // Clear any local session
@@ -99,21 +110,31 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
   }
 
   return (
-    <div className="flex h-full w-64 flex-col bg-sidebar border-r border-sidebar-border">
-      <div className="flex h-14 items-center border-b border-sidebar-border px-4">
-        <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
+    <div className={`flex h-full ${isCollapsed ? "w-16" : "w-64"} flex-col bg-sidebar border-r border-sidebar-border transition-all duration-200`}>
+      <div className="flex h-14 items-center justify-between border-b border-sidebar-border px-2">
+        <Link href="/dashboard" className="flex items-center gap-2 font-semibold px-2">
           <Bot className="h-6 w-6 text-sidebar-primary" />
-          AI Tools Platform
+          {!isCollapsed && <span>AI Tools Platform</span>}
         </Link>
+        <Button variant="ghost" size="icon" aria-label="Toggle sidebar" onClick={() => setIsCollapsed((v) => !v)}>
+          {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+        </Button>
       </div>
       <ScrollArea className="flex-1">
         <div className="space-y-2 p-4">
-          <Button variant={pathname === "/dashboard" ? "secondary" : "ghost"} className="w-full justify-start" asChild>
-            <Link href="/dashboard">
-              <Home className="mr-2 h-4 w-4" />
-              Dashboard
-            </Link>
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant={pathname === "/dashboard" ? "secondary" : "ghost"} className="w-full justify-start" asChild>
+                  <Link href="/dashboard">
+                    <Home className="h-4 w-4" />
+                    {!isCollapsed && <span className="ml-2">Dashboard</span>}
+                  </Link>
+                </Button>
+              </TooltipTrigger>
+              {isCollapsed && <TooltipContent side="right">Dashboard</TooltipContent>}
+            </Tooltip>
+          </TooltipProvider>
 
           <Separator className="my-4" />
 
@@ -125,24 +146,30 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
               <div key={key} className="space-y-1">
                 <div className="flex items-center gap-2 px-2 py-1 text-sm font-medium text-sidebar-foreground">
                   <CategoryIcon className="h-4 w-4" />
-                  {category.name}
+                  {!isCollapsed && <span>{category.name}</span>}
                 </div>
-                <div className="ml-6 space-y-1">
+                <div className={`${isCollapsed ? "ml-0" : "ml-6"} space-y-1`}>
                   {category.tools.map((tool) => {
                     const ToolIcon = tool.icon
                     return (
-                      <Button
-                        key={tool.href}
-                        variant={pathname === tool.href ? "secondary" : "ghost"}
-                        size="sm"
-                        className="w-full justify-start text-xs"
-                        asChild
-                      >
-                        <Link href={tool.href}>
-                          <ToolIcon className="mr-2 h-3 w-3" />
-                          {tool.name}
-                        </Link>
-                      </Button>
+                      <TooltipProvider key={tool.href}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant={pathname === tool.href ? "secondary" : "ghost"}
+                              size="sm"
+                              className={`w-full justify-start ${isCollapsed ? "px-2" : "text-xs"}`}
+                              asChild
+                            >
+                              <Link href={tool.href}>
+                                <ToolIcon className={`${isCollapsed ? "" : "mr-2"} h-4 w-4`} />
+                                {!isCollapsed && <span>{tool.name}</span>}
+                              </Link>
+                            </Button>
+                          </TooltipTrigger>
+                          {isCollapsed && <TooltipContent side="right">{tool.name}</TooltipContent>}
+                        </Tooltip>
+                      </TooltipProvider>
                     )
                   })}
                 </div>
@@ -153,16 +180,30 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
       </ScrollArea>
       <div className="border-t border-sidebar-border p-4">
         <div className="space-y-2">
-          <Button variant="ghost" className="w-full justify-start" asChild>
-            <Link href="/settings">
-              <Settings className="mr-2 h-4 w-4" />
-              Settings
-            </Link>
-          </Button>
-          <Button variant="ghost" className="w-full justify-start" onClick={handleLogout}>
-            <LogOut className="mr-2 h-4 w-4" />
-            Sign Out
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" className="w-full justify-start" asChild>
+                  <Link href="/settings">
+                    <Settings className="h-4 w-4" />
+                    {!isCollapsed && <span className="ml-2">Settings</span>}
+                  </Link>
+                </Button>
+              </TooltipTrigger>
+              {isCollapsed && <TooltipContent side="right">Settings</TooltipContent>}
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" className="w-full justify-start" onClick={handleLogout}>
+                  <LogOut className="h-4 w-4" />
+                  {!isCollapsed && <span className="ml-2">Sign Out</span>}
+                </Button>
+              </TooltipTrigger>
+              {isCollapsed && <TooltipContent side="right">Sign Out</TooltipContent>}
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
     </div>
