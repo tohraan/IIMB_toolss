@@ -36,8 +36,14 @@ import {
   Building,
   ChevronLeft,
   ChevronRight,
+  Folder,
+  Trash,
+  HardDrive,
+  LayoutGrid,
 } from "lucide-react"
+import { Progress } from "@/components/ui/progress"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 const toolCategories = {
   "cloud-dev": {
@@ -94,10 +100,21 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [isCollapsed, setIsCollapsed] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setIsCollapsed(window.innerWidth < 768)
+      const checkMobile = () => window.innerWidth < 768
+      setIsMobile(checkMobile())
+      setIsCollapsed(checkMobile())
+
+      const handleResize = () => {
+        setIsMobile(checkMobile())
+        setIsCollapsed(checkMobile())
+      }
+
+      window.addEventListener("resize", handleResize)
+      return () => window.removeEventListener("resize", handleResize)
     }
   }, [])
 
@@ -109,104 +126,253 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
     router.push("/")
   }
 
-  return (
-    <div className={`flex h-full ${isCollapsed ? "w-16" : "w-64"} flex-col bg-sidebar border-r border-sidebar-border transition-all duration-200`}>
-      <div className="flex h-14 items-center justify-between border-b border-sidebar-border px-2">
-        <Link href="/dashboard" className="flex items-center gap-2 font-semibold px-2">
-          <Bot className="h-6 w-6 text-sidebar-primary" />
-          {!isCollapsed && <span>AI Tools Platform</span>}
-        </Link>
-        <Button variant="ghost" size="icon" aria-label="Toggle sidebar" onClick={() => setIsCollapsed((v) => !v)}>
-          {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-        </Button>
-      </div>
-      <ScrollArea className="flex-1">
-        <div className="space-y-2 p-4">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant={pathname === "/dashboard" ? "secondary" : "ghost"} className="w-full justify-start" asChild>
-                  <Link href="/dashboard">
-                    <Home className="h-4 w-4" />
-                    {!isCollapsed && <span className="ml-2">Dashboard</span>}
-                  </Link>
-                </Button>
-              </TooltipTrigger>
-              {isCollapsed && <TooltipContent side="right">Dashboard</TooltipContent>}
-            </Tooltip>
-          </TooltipProvider>
+  const SidebarContent = (
+    <ScrollArea className="flex-1">
+      <div className="space-y-2 p-4">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant={pathname === "/dashboard" ? "secondary" : "ghost"} className="w-full justify-start" asChild>
+                <Link href="/dashboard">
+                  <Home className="h-4 w-4" />
+                  {!isCollapsed && <span className="ml-2">All Files</span>}
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            {isCollapsed && <TooltipContent side="right">All Files</TooltipContent>}
+          </Tooltip>
+        </TooltipProvider>
 
-          <Separator className="my-4" />
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" className="w-full justify-start" asChild>
+                <Link href="/recent">
+                  <Folder className="h-4 w-4" />
+                  {!isCollapsed && <span className="ml-2">Recent</span>}
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            {isCollapsed && <TooltipContent side="right">Recent</TooltipContent>}
+          </Tooltip>
+        </TooltipProvider>
 
-          {Object.entries(toolCategories).map(([key, category]) => {
-            const CategoryIcon = category.icon
-            const isActive = currentCategory === key || pathname.includes(`/tools/${key}`)
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" className="w-full justify-start" asChild>
+                <Link href="/favorites">
+                  <Folder className="h-4 w-4" />
+                  {!isCollapsed && <span className="ml-2">Favorites</span>}
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            {isCollapsed && <TooltipContent side="right">Favorites</TooltipContent>}
+          </Tooltip>
+        </TooltipProvider>
 
-            return (
-              <div key={key} className="space-y-1">
-                <div className="flex items-center gap-2 px-2 py-1 text-sm font-medium text-sidebar-foreground">
-                  <CategoryIcon className="h-4 w-4" />
-                  {!isCollapsed && <span>{category.name}</span>}
-                </div>
-                <div className={`${isCollapsed ? "ml-0" : "ml-6"} space-y-1`}>
-                  {category.tools.map((tool) => {
-                    const ToolIcon = tool.icon
-                    return (
-                      <TooltipProvider key={tool.href}>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant={pathname === tool.href ? "secondary" : "ghost"}
-                              size="sm"
-                              className={`w-full justify-start ${isCollapsed ? "px-2" : "text-xs"}`}
-                              asChild
-                            >
-                              <Link href={tool.href}>
-                                <ToolIcon className={`${isCollapsed ? "" : "mr-2"} h-4 w-4`} />
-                                {!isCollapsed && <span>{tool.name}</span>}
-                              </Link>
-                            </Button>
-                          </TooltipTrigger>
-                          {isCollapsed && <TooltipContent side="right">{tool.name}</TooltipContent>}
-                        </Tooltip>
-                      </TooltipProvider>
-                    )
-                  })}
-                </div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" className="w-full justify-start" asChild>
+                <Link href="/shared">
+                  <Folder className="h-4 w-4" />
+                  {!isCollapsed && <span className="ml-2">Shared</span>}
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            {isCollapsed && <TooltipContent side="right">Shared</TooltipContent>}
+          </Tooltip>
+        </TooltipProvider>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" className="w-full justify-start" asChild>
+                <Link href="/tags">
+                  <Folder className="h-4 w-4" />
+                  {!isCollapsed && <span className="ml-2">Tags</span>}
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            {isCollapsed && <TooltipContent side="right">Tags</TooltipContent>}
+          </Tooltip>
+        </TooltipProvider>
+
+        <Separator className="my-4" />
+
+        {Object.entries(toolCategories).map(([key, category]) => {
+          const CategoryIcon = category.icon
+          const isActive = currentCategory === key || pathname.includes(`/tools/${key}`)
+
+          return (
+            <div key={key} className="space-y-1">
+              <div className="flex items-center gap-2 px-2 py-1 text-sm font-medium text-sidebar-foreground">
+                <CategoryIcon className="h-4 w-4" />
+                {!isCollapsed && <span>{category.name}</span>}
               </div>
-            )
-          })}
+              <div className={`${isCollapsed ? "ml-0" : "ml-6"} space-y-1`}>
+                {category.tools.map((tool) => {
+                  const ToolIcon = tool.icon
+                  return (
+                    <TooltipProvider key={tool.href}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant={pathname === tool.href ? "secondary" : "ghost"}
+                            size="sm"
+                            className={`w-full justify-start ${isCollapsed ? "px-2" : "text-xs"}`}
+                            asChild
+                          >
+                            <Link href={tool.href}>
+                              <ToolIcon className={`${isCollapsed ? "" : "mr-2"} h-4 w-4`} />
+                              {!isCollapsed && <span>{tool.name}</span>}
+                            </Link>
+                          </Button>
+                        </TooltipTrigger>
+                        {isCollapsed && <TooltipContent side="right">{tool.name}</TooltipContent>}
+                      </Tooltip>
+                    </TooltipProvider>
+                  )
+                })}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </ScrollArea>
+  )
+
+  return (
+    <> {/* Use a React Fragment to return multiple elements */}
+      <div className={`hidden md:flex h-full ${isCollapsed ? "w-16" : "w-64"} flex-col bg-sidebar border-r border-sidebar-border transition-all duration-200`}>
+        <div className="flex h-14 items-center justify-between border-b border-sidebar-border px-2">
+          <Link href="/dashboard" className="flex items-center gap-2 font-semibold px-2">
+            <Bot className="h-6 w-6 text-sidebar-primary" />
+            {!isCollapsed && <span>AI Tools Platform</span>}
+          </Link>
+          <Button variant="ghost" size="icon" aria-label="Toggle sidebar" onClick={() => setIsCollapsed((v) => !v)}>
+            {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+          </Button>
         </div>
-      </ScrollArea>
-      <div className="border-t border-sidebar-border p-4">
-        <div className="space-y-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
+        {SidebarContent}
+        <div className="border-t border-sidebar-border p-4">
+          <div className="space-y-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" className="w-full justify-start" asChild>
+                    <Link href="/settings">
+                      <Settings className="h-4 w-4" />
+                      {!isCollapsed && <span className="ml-2">Settings</span>}
+                    </Link>
+                  </Button>
+                </TooltipTrigger>
+                {isCollapsed && <TooltipContent side="right">Settings</TooltipContent>}
+              </Tooltip>
+            </TooltipProvider>
+
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" className="w-full justify-start" asChild>
+                    <Link href="/deleted-files">
+                      <Trash className="h-4 w-4" />
+                      {!isCollapsed && <span className="ml-2">Deleted Files</span>}
+                    </Link>
+                  </Button>
+                </TooltipTrigger>
+                {isCollapsed && <TooltipContent side="right">Deleted Files</TooltipContent>}
+              </Tooltip>
+            </TooltipProvider>
+
+            <div className="mt-4 space-y-2">
+              {!isCollapsed && (
+                <div className="px-2">
+                  <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
+                    <span>Storage</span>
+                    <span className="font-medium">42 GB / 256 GB</span>
+                  </div>
+                  <Progress value={42 / 256 * 100} className="h-2" />
+                </div>
+              )}
+              {isCollapsed && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" className="w-full justify-center">
+                        <HardDrive className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="right">Storage: 42 GB / 256 GB</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+            </div>
+
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" className="w-full justify-start" onClick={handleLogout}>
+                    <LogOut className="h-4 w-4" />
+                    {!isCollapsed && <span className="ml-2">Sign Out</span>}
+                  </Button>
+                </TooltipTrigger>
+                {isCollapsed && <TooltipContent side="right">Sign Out</TooltipContent>}
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Sidebar (Hamburger Menu) */}
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button variant="ghost" size="icon" className="md:hidden absolute top-4 left-4 z-50">
+            <LayoutGrid className="h-6 w-6" />
+            <span className="sr-only">Toggle sidebar</span>
+          </Button>
+        </SheetTrigger>
+        <SheetContent side="left" className="p-0 w-64">
+          <div className="flex h-full w-full flex-col bg-sidebar border-r border-sidebar-border">
+            <div className="flex h-14 items-center border-b border-sidebar-border px-4">
+              <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
+                <Bot className="h-6 w-6 text-sidebar-primary" />
+                AI Tools Platform
+              </Link>
+            </div>
+            {SidebarContent}
+            <div className="border-t border-sidebar-border p-4">
+              <div className="space-y-2">
                 <Button variant="ghost" className="w-full justify-start" asChild>
                   <Link href="/settings">
-                    <Settings className="h-4 w-4" />
-                    {!isCollapsed && <span className="ml-2">Settings</span>}
+                    <Settings className="mr-2 h-4 w-4" />
+                    Settings
                   </Link>
                 </Button>
-              </TooltipTrigger>
-              {isCollapsed && <TooltipContent side="right">Settings</TooltipContent>}
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" className="w-full justify-start" onClick={handleLogout}>
-                  <LogOut className="h-4 w-4" />
-                  {!isCollapsed && <span className="ml-2">Sign Out</span>}
+                <Button variant="ghost" className="w-full justify-start" asChild>
+                  <Link href="/deleted-files">
+                    <Trash className="mr-2 h-4 w-4" />
+                    Deleted Files
+                  </Link>
                 </Button>
-              </TooltipTrigger>
-              {isCollapsed && <TooltipContent side="right">Sign Out</TooltipContent>}
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-      </div>
-    </div>
+                <div className="mt-4 space-y-2 px-2">
+                  <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
+                    <span>Storage</span>
+                    <span className="font-medium">42 GB / 256 GB</span>
+                  </div>
+                  <Progress value={42 / 256 * 100} className="h-2" />
+                </div>
+                <Button variant="ghost" className="w-full justify-start" onClick={handleLogout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sign Out
+                </Button>
+              </div>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
+    </>
   )
 }
 

@@ -8,7 +8,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { BarChart, Upload, Database, TrendingUp } from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Upload, Database, TrendingUp, Table, Gauge, Files } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 
 export default function DatasetAnalyzerPage() {
@@ -46,14 +48,14 @@ export default function DatasetAnalyzerPage() {
           },
         },
         columns: [
-          { name: "user_id", type: "numeric", nulls: 0, unique: 15420 },
-          { name: "age", type: "numeric", nulls: 23, unique: 67 },
-          { name: "gender", type: "categorical", nulls: 5, unique: 3 },
-          { name: "income", type: "numeric", nulls: 156, unique: 8934 },
-          { name: "education", type: "categorical", nulls: 89, unique: 5 },
-          { name: "purchase_amount", type: "numeric", nulls: 12, unique: 3421 },
-          { name: "category", type: "categorical", nulls: 0, unique: 8 },
-          { name: "timestamp", type: "datetime", nulls: 0, unique: 15420 },
+          { name: "user_id", type: "numeric", nulls: 0, unique: 15420, min: 1, max: 15420, mean: 7710.5, std: 4451.7 },
+          { name: "age", type: "numeric", nulls: 23, unique: 67, min: 18, max: 85, mean: 42.3, std: 14.5 },
+          { name: "gender", type: "categorical", nulls: 5, unique: 3, top: "Female", freq: 7800 },
+          { name: "income", type: "numeric", nulls: 156, unique: 8934, min: 20000, max: 150000, mean: 75000, std: 25000 },
+          { name: "education", type: "categorical", nulls: 89, unique: 5, top: "Bachelor's", freq: 6200 },
+          { name: "purchase_amount", type: "numeric", nulls: 12, unique: 3421, min: 10, max: 5000, mean: 250, std: 400 },
+          { name: "category", type: "categorical", nulls: 0, unique: 8, top: "Electronics", freq: 3000 },
+          { name: "timestamp", type: "datetime", nulls: 0, unique: 15420, min: "2023-01-01", max: "2024-12-31" },
         ],
         statistics: {
           completeness: 97.2,
@@ -96,238 +98,314 @@ export default function DatasetAnalyzerPage() {
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">Dataset Analyzer</h1>
-        <p className="text-gray-400">Upload and analyze your datasets to discover insights and data quality metrics</p>
-      </div>
-
-      {step === 1 && (
-        <div className="space-y-6">
-          <Card className="bg-gray-900 border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Upload className="h-5 w-5" />
-                Upload Dataset
-              </CardTitle>
-              <CardDescription>Upload a CSV, Excel, or JSON file for analysis</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="border-2 border-dashed border-gray-700 rounded-lg p-8 text-center">
-                <Upload className="h-12 w-12 text-gray-500 mx-auto mb-4" />
-                <div className="space-y-2">
-                  <p className="text-gray-300">Drop your file here or click to browse</p>
-                  <p className="text-sm text-gray-500">Supports CSV, XLSX, JSON files up to 10MB</p>
-                </div>
-                <Input
-                  type="file"
-                  accept=".csv,.xlsx,.json"
-                  onChange={handleFileUpload}
-                  className="mt-4 bg-gray-800 border-gray-700 text-white file:bg-blue-600 file:text-white file:border-0 file:rounded file:px-4 file:py-2"
-                />
-              </div>
-              {file && (
-                <div className="mt-4 p-3 bg-gray-800 rounded-lg">
-                  <p className="text-white font-medium">{file.name}</p>
-                  <p className="text-sm text-gray-400">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          <Button onClick={analyzeDataset} disabled={!file} className="w-full bg-blue-600 hover:bg-blue-700" size="lg">
-            <BarChart className="h-4 w-4 mr-2" />
-            Analyze Dataset
-          </Button>
+    <div className="flex min-h-screen w-full flex-col">
+      <div className="flex flex-1 flex-col gap-8 p-6 md:p-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold">Dataset Analyzer</h1>
+            <p className="text-muted-foreground">Upload and analyze your datasets to discover insights and data quality metrics.</p>
+          </div>
         </div>
-      )}
 
-      {step === 2 && (
-        <Card className="bg-gray-900 border-gray-800">
-          <CardContent className="p-8 text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-            <h3 className="text-xl font-semibold text-white mb-2">Analyzing Dataset</h3>
-            <p className="text-gray-400">Processing your data and generating insights...</p>
-          </CardContent>
-        </Card>
-      )}
-
-      {step === 3 && analysis && (
-        <div className="space-y-6">
-          <Card className="bg-gray-900 border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Database className="h-5 w-5" />
-                Dataset Overview
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-400">{analysis.overview.rows.toLocaleString()}</div>
-                  <div className="text-sm text-gray-400">Rows</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-green-400">{analysis.overview.columns}</div>
-                  <div className="text-sm text-gray-400">Columns</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-400">{analysis.overview.fileSize}</div>
-                  <div className="text-sm text-gray-400">File Size</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-orange-400">{analysis.qualityScore}%</div>
-                  <div className="text-sm text-gray-400">Quality Score</div>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <Badge variant="outline" className="border-blue-500 text-blue-400">
-                  {analysis.overview.dataTypes.numeric} Numeric
-                </Badge>
-                <Badge variant="outline" className="border-green-500 text-green-400">
-                  {analysis.overview.dataTypes.categorical} Categorical
-                </Badge>
-                <Badge variant="outline" className="border-purple-500 text-purple-400">
-                  {analysis.overview.dataTypes.datetime} DateTime
-                </Badge>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gray-900 border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-white">Column Analysis</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {analysis.columns.map((column: any, index: number) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="font-medium text-white">{column.name}</div>
-                      <Badge
-                        variant="outline"
-                        className={
-                          column.type === "numeric"
-                            ? "border-blue-500 text-blue-400"
-                            : column.type === "categorical"
-                              ? "border-green-500 text-green-400"
-                              : "border-purple-500 text-purple-400"
-                        }
-                      >
-                        {column.type}
-                      </Badge>
+        <div className="grid gap-8">
+          {step === 1 && (
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Upload className="h-5 w-5 text-primary" />
+                    Upload Dataset
+                  </CardTitle>
+                  <CardDescription>Upload a CSV, Excel, or JSON file for analysis (max 10MB).</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-4">
+                    <div className="relative rounded-lg border-2 border-dashed border-border p-6 text-center transition-colors hover:border-primary/50">
+                      <Upload className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+                      <p className="mb-1 text-sm text-muted-foreground">Drag and drop your file here, or</p>
+                      <label htmlFor="file-upload" className="cursor-pointer text-sm font-medium text-primary hover:underline">
+                        browse to upload
+                        <Input id="file-upload" type="file" accept=".csv,.xlsx,.json" onChange={handleFileUpload} className="sr-only" />
+                      </label>
                     </div>
-                    <div className="flex gap-4 text-sm text-gray-400">
-                      <span>Nulls: {column.nulls}</span>
-                      <span>Unique: {column.unique.toLocaleString()}</span>
-                    </div>
+                    {file && (
+                      <div className="flex items-center justify-between rounded-md bg-secondary/50 p-3 text-sm">
+                        <span className="font-medium">{file.name}</span>
+                        <span className="text-muted-foreground">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                      </div>
+                    )}
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="bg-gray-900 border-gray-800">
-              <CardHeader>
-                <CardTitle className="text-white">Data Quality</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-300">Completeness</span>
-                    <span className="text-white">{analysis.statistics.completeness}%</span>
-                  </div>
-                  <Progress value={analysis.statistics.completeness} className="h-2" />
-                </div>
-                <div className="grid grid-cols-2 gap-4 text-center">
-                  <div>
-                    <div className="text-xl font-bold text-red-400">{analysis.statistics.duplicates}</div>
-                    <div className="text-xs text-gray-400">Duplicates</div>
-                  </div>
-                  <div>
-                    <div className="text-xl font-bold text-orange-400">{analysis.statistics.outliers}</div>
-                    <div className="text-xs text-gray-400">Outliers</div>
-                  </div>
-                </div>
+              <Button onClick={analyzeDataset} disabled={!file || loading} className="w-full" size="lg">
+                {loading ? (
+                  <>
+                    <Upload className="mr-2 h-4 w-4 animate-bounce" />
+                    Analyzing Dataset...
+                  </>
+                ) : (
+                  <>
+                    <Files className="mr-2 h-4 w-4" />
+                    Analyze Dataset
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
+
+          {step === 2 && (
+            <Card className="flex h-[300px] items-center justify-center">
+              <CardContent className="text-center">
+                <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-primary mx-auto mb-4" />
+                <h3 className="text-xl font-semibold">Analyzing Dataset</h3>
+                <p className="text-muted-foreground">Processing your data and generating insights...</p>
               </CardContent>
             </Card>
+          )}
 
-            <Card className="bg-gray-900 border-gray-800">
-              <CardHeader>
-                <CardTitle className="text-white">Correlations</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {analysis.statistics.correlations.map((corr: any, index: number) => (
-                    <div key={index} className="flex items-center justify-between">
-                      <div className="text-sm text-gray-300">
-                        {corr.var1} × {corr.var2}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="text-sm font-medium text-white">{corr.correlation}</div>
-                        <div className="w-16 bg-gray-700 rounded-full h-2">
-                          <div
-                            className="bg-blue-500 h-2 rounded-full"
-                            style={{ width: `${Math.abs(corr.correlation) * 100}%` }}
-                          />
+          {step === 3 && analysis && (
+            <div className="space-y-6">
+              <Tabs defaultValue="overview">
+                <ScrollArea orientation="horizontal" className="pb-2">
+                  <TabsList className="grid w-full grid-cols-3 md:grid-cols-5">
+                    <TabsTrigger value="overview">Overview</TabsTrigger>
+                    <TabsTrigger value="columns">Column Analysis</TabsTrigger>
+                    <TabsTrigger value="quality">Data Quality</TabsTrigger>
+                    <TabsTrigger value="insights">Insights</TabsTrigger>
+                    <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
+                  </TabsList>
+                </ScrollArea>
+
+                <TabsContent value="overview" className="mt-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Database className="h-5 w-5 text-primary" />
+                        Dataset Overview
+                      </CardTitle>
+                      <CardDescription>High-level summary of your dataset: {analysis.overview.fileName}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+                        <div className="rounded-md border p-4 text-center">
+                          <div className="text-2xl font-bold text-primary">{analysis.overview.rows.toLocaleString()}</div>
+                          <div className="text-sm text-muted-foreground">Rows</div>
+                        </div>
+                        <div className="rounded-md border p-4 text-center">
+                          <div className="text-2xl font-bold text-primary">{analysis.overview.columns}</div>
+                          <div className="text-sm text-muted-foreground">Columns</div>
+                        </div>
+                        <div className="rounded-md border p-4 text-center">
+                          <div className="text-2xl font-bold text-primary">{analysis.overview.fileSize}</div>
+                          <div className="text-sm text-muted-foreground">File Size</div>
+                        </div>
+                        <div className="rounded-md border p-4 text-center">
+                          <div className="text-2xl font-bold text-primary">{analysis.qualityScore}%</div>
+                          <div className="text-sm text-muted-foreground">Quality Score</div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                      <div className="space-y-2">
+                        <h3 className="text-sm font-medium">Data Types</h3>
+                        <div className="flex flex-wrap gap-2">
+                          <Badge variant="secondary" className="flex items-center gap-1">
+                            <span className="h-2 w-2 rounded-full bg-blue-500" /> {analysis.overview.dataTypes.numeric} Numeric
+                          </Badge>
+                          <Badge variant="secondary" className="flex items-center gap-1">
+                            <span className="h-2 w-2 rounded-full bg-green-500" /> {analysis.overview.dataTypes.categorical} Categorical
+                          </Badge>
+                          <Badge variant="secondary" className="flex items-center gap-1">
+                            <span className="h-2 w-2 rounded-full bg-purple-500" /> {analysis.overview.dataTypes.datetime} DateTime
+                          </Badge>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
 
-          <Card className="bg-gray-900 border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <TrendingUp className="h-5 w-5" />
-                Key Insights
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2">
-                {analysis.insights.map((insight: string, index: number) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
-                    <span className="text-gray-300">{insight}</span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
+                <TabsContent value="columns" className="mt-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Column Analysis</CardTitle>
+                      <CardDescription>Detailed breakdown of each column in your dataset.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <ScrollArea className="h-[400px] w-full rounded-md border">
+                        <div className="relative w-full overflow-auto">
+                          <Table>
+                            <TableHeader className="sticky top-0 bg-card/80 backdrop-blur-sm">
+                              <TableRow>
+                                <TableHead className="w-[150px]">Column Name</TableHead>
+                                <TableHead>Type</TableHead>
+                                <TableHead>Nulls</TableHead>
+                                <TableHead>Unique</TableHead>
+                                <TableHead>Min</TableHead>
+                                <TableHead>Max</TableHead>
+                                <TableHead>Mean</TableHead>
+                                <TableHead>Std Dev</TableHead>
+                                <TableHead>Top Value</TableHead>
+                                <TableHead>Frequency</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {analysis.columns.map((column: any, index: number) => (
+                                <TableRow key={index}>
+                                  <TableCell className="font-medium">{column.name}</TableCell>
+                                  <TableCell>
+                                    <Badge
+                                      variant="outline"
+                                      className={
+                                        column.type === "numeric"
+                                          ? "border-blue-500 text-blue-400"
+                                          : column.type === "categorical"
+                                            ? "border-green-500 text-green-400"
+                                            : "border-purple-500 text-purple-400"
+                                      }
+                                    >
+                                      {column.type}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell>{column.nulls}</TableCell>
+                                  <TableCell>{column.unique?.toLocaleString()}</TableCell>
+                                  <TableCell>{column.min ?? "-"}</TableCell>
+                                  <TableCell>{column.max ?? "-"}</TableCell>
+                                  <TableCell>{column.mean?.toFixed(2) ?? "-"}</TableCell>
+                                  <TableCell>{column.std?.toFixed(2) ?? "-"}</TableCell>
+                                  <TableCell>{column.top ?? "-"}</TableCell>
+                                  <TableCell>{column.freq?.toLocaleString() ?? "-"}</TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      </ScrollArea>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
 
-          <Card className="bg-gray-900 border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-white">Recommendations</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2">
-                {analysis.recommendations.map((recommendation: string, index: number) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0" />
-                    <span className="text-gray-300">{recommendation}</span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
+                <TabsContent value="quality" className="mt-6">
+                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Gauge className="h-5 w-5 text-primary" />
+                          Data Quality Metrics
+                        </CardTitle>
+                        <CardDescription>Key metrics indicating the overall quality of your dataset.</CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        <div>
+                          <div className="mb-1 flex justify-between text-sm">
+                            <span className="font-medium">Completeness</span>
+                            <span className="text-muted-foreground">{analysis.statistics.completeness}%</span>
+                          </div>
+                          <Progress value={analysis.statistics.completeness} className="h-2" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4 text-center">
+                          <div className="rounded-md border p-4">
+                            <div className="text-2xl font-bold text-destructive">{analysis.statistics.duplicates}</div>
+                            <div className="text-sm text-muted-foreground">Duplicates</div>
+                          </div>
+                          <div className="rounded-md border p-4">
+                            <div className="text-2xl font-bold text-orange-400">{analysis.statistics.outliers}</div>
+                            <div className="text-sm text-muted-foreground">Outliers</div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
 
-          <Button
-            onClick={() => {
-              setStep(1)
-              setAnalysis(null)
-              setFile(null)
-            }}
-            variant="outline"
-            className="w-full border-gray-700 text-gray-300 hover:bg-gray-800"
-          >
-            Analyze New Dataset
-          </Button>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <TrendingUp className="h-5 w-5 text-primary" />
+                          Feature Correlations
+                        </CardTitle>
+                        <CardDescription>Identify relationships between different variables.</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          {analysis.statistics.correlations.map((corr: any, index: number) => (
+                            <div key={index} className="flex items-center justify-between rounded-md border p-3">
+                              <div className="text-sm font-medium">
+                                {corr.var1} <span className="text-muted-foreground">×</span> {corr.var2}
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <div className="text-sm text-muted-foreground">{(corr.correlation * 100).toFixed(0)}%</div>
+                                <div className="h-2 w-20 rounded-full bg-muted">
+                                  <div
+                                    className="h-2 rounded-full bg-primary"
+                                    style={{ width: `${Math.abs(corr.correlation) * 100}%` }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="insights" className="mt-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Files className="h-5 w-5 text-primary" />
+                        Key Insights
+                      </CardTitle>
+                      <CardDescription>Important discoveries and patterns from your dataset.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-3">
+                        {analysis.insights.map((insight: string, index: number) => (
+                          <li key={index} className="flex items-start gap-3 rounded-md border p-3 text-sm text-muted-foreground">
+                            <div className="h-2 w-2 flex-shrink-0 rounded-full bg-primary mt-2" />
+                            {insight}
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="recommendations" className="mt-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <TrendingUp className="h-5 w-5 text-primary" />
+                        Recommendations
+                      </CardTitle>
+                      <CardDescription>Actionable steps to improve data quality or leverage findings.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-3">
+                        {analysis.recommendations.map((rec: string, index: number) => (
+                          <li key={index} className="flex items-start gap-3 rounded-md border p-3 text-sm text-muted-foreground">
+                            <div className="h-2 w-2 flex-shrink-0 rounded-full bg-green-500 mt-2" />
+                            {rec}
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
+
+              <Button
+                onClick={() => {
+                  setStep(1)
+                  setAnalysis(null)
+                  setFile(null)
+                }}
+                variant="outline"
+                className="w-full"
+              >
+                Analyze New Dataset
+              </Button>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   )
 }
