@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { Heart, Frown, Meh, Smile, TrendingUp } from "lucide-react"
+import { Heart, Frown, Meh, Smile, TrendingUp, Sparkles, Lightbulb } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 
 export default function SentimentAnalyzerPage() {
@@ -90,263 +90,292 @@ export default function SentimentAnalyzerPage() {
     }, 2500)
   }
 
-  const getSentimentIcon = (iconType: string) => {
-    switch (iconType) {
-      case "smile":
+  const getSentimentIcon = (label: string) => {
+    switch (label.toLowerCase()) {
+      case "positive":
         return <Smile className="h-4 w-4" />
-      case "meh":
+      case "neutral":
         return <Meh className="h-4 w-4" />
-      case "frown":
+      case "negative":
         return <Frown className="h-4 w-4" />
       default:
         return <Heart className="h-4 w-4" />
     }
   }
 
-  const getSentimentColor = (label: string) => {
+  const getSentimentColorClass = (label: string) => {
     switch (label.toLowerCase()) {
       case "positive":
-        return "text-green-400"
+        return "text-green-500 bg-green-500/10"
       case "negative":
-        return "text-red-400"
+        return "text-destructive bg-destructive/10"
+      case "neutral":
+        return "text-gray-500 bg-gray-500/10"
       default:
-        return "text-gray-400"
+        return "text-primary bg-primary/10"
+    }
+  }
+
+  const getEmotionColorClass = (emotion: string) => {
+    switch (emotion.toLowerCase()) {
+      case "joy":
+      case "anticipation":
+        return "text-yellow-500 bg-yellow-500/10"
+      case "trust":
+      case "sadness":
+        return "text-blue-500 bg-blue-500/10"
+      case "anger":
+      case "fear":
+      case "disgust":
+        return "text-destructive bg-destructive/10"
+      case "surprise":
+        return "text-purple-500 bg-purple-500/10"
+      default:
+        return "text-primary bg-primary/10"
     }
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">Sentiment Analyzer</h1>
-        <p className="text-gray-400">Analyze the emotional tone and sentiment of any text using advanced AI</p>
-      </div>
-
-      {step === 1 && (
-        <div className="space-y-6">
-          <Card className="bg-gray-900 border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Heart className="h-5 w-5" />
-                Text to Analyze
-              </CardTitle>
-              <CardDescription>Enter the text you want to analyze for sentiment and emotions</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Textarea
-                placeholder="Enter your text here for sentiment analysis..."
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                className="min-h-[200px] bg-gray-800 border-gray-700 text-white"
-              />
-              <div className="mt-2 text-sm text-gray-400">{text.length} characters</div>
-            </CardContent>
-          </Card>
-
-          <Button onClick={analyzeSentiment} className="w-full bg-blue-600 hover:bg-blue-700" size="lg">
-            <TrendingUp className="h-4 w-4 mr-2" />
-            Analyze Sentiment
-          </Button>
-        </div>
-      )}
-
-      {step === 2 && (
-        <Card className="bg-gray-900 border-gray-800">
-          <CardContent className="p-8 text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-            <h3 className="text-xl font-semibold text-white mb-2">Analyzing Sentiment</h3>
-            <p className="text-gray-400">AI is processing the emotional tone of your text...</p>
-          </CardContent>
-        </Card>
-      )}
-
-      {step === 3 && analysis && (
-        <div className="space-y-6">
-          <Card className="bg-gray-900 border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-white">Overall Sentiment</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center mb-6">
-                <div className={`text-4xl font-bold mb-2 ${getSentimentColor(analysis.overallSentiment.label)}`}>
-                  {analysis.overallSentiment.label}
-                </div>
-                <div className="text-gray-400">
-                  Score: {(analysis.overallSentiment.score * 100).toFixed(1)}% | Confidence:{" "}
-                  {(analysis.overallSentiment.confidence * 100).toFixed(1)}%
-                </div>
-              </div>
-              <div className="space-y-3">
-                {analysis.sentimentBreakdown.map((sentiment: any, index: number) => (
-                  <div key={index} className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`p-2 rounded-full ${
-                          sentiment.color === "green"
-                            ? "bg-green-500/20 text-green-400"
-                            : sentiment.color === "red"
-                              ? "bg-red-500/20 text-red-400"
-                              : "bg-gray-500/20 text-gray-400"
-                        }`}
-                      >
-                        {getSentimentIcon(sentiment.icon)}
-                      </div>
-                      <span className="text-white font-medium">{sentiment.label}</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-gray-300 text-sm w-12">{(sentiment.score * 100).toFixed(1)}%</span>
-                      <div className="w-24 bg-gray-700 rounded-full h-2">
-                        <div
-                          className={`h-2 rounded-full ${
-                            sentiment.color === "green"
-                              ? "bg-green-500"
-                              : sentiment.color === "red"
-                                ? "bg-red-500"
-                                : "bg-gray-500"
-                          }`}
-                          style={{ width: `${sentiment.score * 100}%` }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gray-900 border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-white">Emotional Analysis</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {analysis.emotions.map((emotion: any, index: number) => (
-                  <div key={index} className="text-center">
-                    <div className="text-lg font-semibold text-white mb-1">{emotion.emotion}</div>
-                    <div className="text-2xl font-bold text-blue-400 mb-2">{(emotion.intensity * 100).toFixed(0)}%</div>
-                    <Progress value={emotion.intensity * 100} className="h-2" />
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gray-900 border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-white">Key Phrases</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {analysis.keyPhrases.map((phrase: any, index: number) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <span className="text-white">"{phrase.phrase}"</span>
-                      <Badge
-                        variant="outline"
-                        className={`${
-                          phrase.sentiment === "positive"
-                            ? "border-green-500 text-green-400"
-                            : phrase.sentiment === "negative"
-                              ? "border-red-500 text-red-400"
-                              : "border-gray-500 text-gray-400"
-                        }`}
-                      >
-                        {phrase.sentiment}
-                      </Badge>
-                    </div>
-                    <div className="text-sm text-gray-400">{(phrase.strength * 100).toFixed(0)}% strength</div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="bg-gray-900 border-gray-800">
-              <CardHeader>
-                <CardTitle className="text-white">Text Metrics</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Word Count:</span>
-                  <span className="text-white">{analysis.textMetrics.wordCount}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Sentences:</span>
-                  <span className="text-white">{analysis.textMetrics.sentenceCount}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Avg Sentiment:</span>
-                  <span className="text-white">{(analysis.textMetrics.avgSentimentPerSentence * 100).toFixed(1)}%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Subjectivity:</span>
-                  <span className="text-white">{(analysis.textMetrics.subjectivity * 100).toFixed(1)}%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Polarity:</span>
-                  <span className="text-white">{(analysis.textMetrics.polarity * 100).toFixed(1)}%</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gray-900 border-gray-800">
-              <CardHeader>
-                <CardTitle className="text-white">Sentiment Trend</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {analysis.sentimentTrend.map((point: any, index: number) => (
-                    <div key={index} className="flex items-center gap-3">
-                      <span className="text-gray-400 text-sm w-16">Sent {point.sentence}:</span>
-                      <div className="flex-1 bg-gray-700 rounded-full h-2">
-                        <div
-                          className={`h-2 rounded-full ${
-                            point.sentiment > 0.6
-                              ? "bg-green-500"
-                              : point.sentiment > 0.4
-                                ? "bg-yellow-500"
-                                : "bg-red-500"
-                          }`}
-                          style={{ width: `${point.sentiment * 100}%` }}
-                        />
-                      </div>
-                      <span className="text-white text-sm w-12">{(point.sentiment * 100).toFixed(0)}%</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+    <div className="flex min-h-screen w-full flex-col">
+      <div className="flex flex-1 flex-col gap-8 p-6 md:p-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold">Sentiment Analyzer</h1>
+            <p className="text-muted-foreground">Analyze the emotional tone and sentiment of any text using advanced AI.</p>
           </div>
-
-          <Card className="bg-gray-900 border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-white">Key Insights</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2">
-                {analysis.insights.map((insight: string, index: number) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
-                    <span className="text-gray-300">{insight}</span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Button
-            onClick={() => {
-              setStep(1)
-              setAnalysis(null)
-              setText("")
-            }}
-            variant="outline"
-            className="w-full border-gray-700 text-gray-300 hover:bg-gray-800"
-          >
-            Analyze New Text
-          </Button>
         </div>
-      )}
+
+        <div className="grid gap-8">
+          {step === 1 && (
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Heart className="h-5 w-5 text-primary" />
+                    Text to Analyze
+                  </CardTitle>
+                  <CardDescription>Enter the text you want to analyze for sentiment and emotions.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Textarea
+                    placeholder="Enter your text here for sentiment analysis..."
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    className="min-h-[200px]"
+                  />
+                  <div className="mt-2 text-sm text-muted-foreground">{text.length} characters</div>
+                </CardContent>
+              </Card>
+
+              <Button onClick={analyzeSentiment} className="w-full" size="lg" disabled={loading}>
+                {loading ? (
+                  <>
+                    <Sparkles className="mr-2 h-4 w-4 animate-bounce" />
+                    Analyzing Sentiment...
+                  </>
+                ) : (
+                  <>
+                    <TrendingUp className="mr-2 h-4 w-4" />
+                    Analyze Sentiment
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
+
+          {step === 2 && (
+            <Card className="flex h-[300px] items-center justify-center">
+              <CardContent className="text-center">
+                <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-primary mx-auto mb-4" />
+                <h3 className="text-xl font-semibold">Analyzing Sentiment</h3>
+                <p className="text-muted-foreground">AI is processing the emotional tone of your text...</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {step === 3 && analysis && (
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    {getSentimentIcon(analysis.overallSentiment.label)} Overall Sentiment
+                  </CardTitle>
+                  <CardDescription>The primary emotional tone detected in your text.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="text-center">
+                    <div className={`text-5xl font-bold mb-2 ${getSentimentColorClass(analysis.overallSentiment.label)}`}>
+                      {analysis.overallSentiment.label}
+                    </div>
+                    <div className="text-muted-foreground">
+                      Score: {(analysis.overallSentiment.score * 100).toFixed(1)}% | Confidence:{" "}
+                      {(analysis.overallSentiment.confidence * 100).toFixed(1)}%
+                    </div>
+                  </div>
+                  <div className="grid gap-4">
+                    {analysis.sentimentBreakdown.map((sentiment: any, index: number) => (
+                      <div key={index} className="flex items-center justify-between rounded-md border p-3">
+                        <div className="flex items-center gap-3">
+                          <Badge variant="secondary" className={`flex items-center gap-1 ${getSentimentColorClass(sentiment.label)}`}>
+                            {getSentimentIcon(sentiment.label)} <span className="font-medium">{sentiment.label}</span>
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-muted-foreground text-sm w-12">{(sentiment.score * 100).toFixed(1)}%</span>
+                          <div className="h-2 w-24 rounded-full bg-muted">
+                            <div
+                              className={`h-2 rounded-full ${getSentimentColorClass(sentiment.label)}`}
+                              style={{ width: `${sentiment.score * 100}%` }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Heart className="h-5 w-5 text-primary" />
+                    Emotional Analysis
+                  </CardTitle>
+                  <CardDescription>Breakdown of underlying emotions detected in the text.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                    {analysis.emotions.map((emotion: any, index: number) => (
+                      <div key={index} className="rounded-md border p-4 text-center">
+                        <div className="mb-1 text-sm font-medium text-muted-foreground">{emotion.emotion}</div>
+                        <div className={`mb-2 text-2xl font-bold ${getEmotionColorClass(emotion.emotion)}`}>{(emotion.intensity * 100).toFixed(0)}%</div>
+                        <Progress value={emotion.intensity * 100} className="h-2" />
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Lightbulb className="h-5 w-5 text-primary" />
+                    Key Phrases
+                  </CardTitle>
+                  <CardDescription>Important phrases and their associated sentiment.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {analysis.keyPhrases.map((phrase: any, index: number) => (
+                      <div key={index} className="flex items-center justify-between rounded-md border p-3">
+                        <div className="flex items-center gap-3">
+                          <span className="font-medium text-muted-foreground">"{phrase.phrase}"</span>
+                          <Badge variant="secondary" className={`ml-2 ${getSentimentColorClass(phrase.sentiment)}`}>
+                            {phrase.sentiment}
+                          </Badge>
+                        </div>
+                        <span className="text-sm text-muted-foreground">{(phrase.strength * 100).toFixed(0)}% strength</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Text Metrics</CardTitle>
+                    <CardDescription>Quantitative data about the analyzed text.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Word Count:</span>
+                      <span className="font-medium">{analysis.textMetrics.wordCount}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Sentences:</span>
+                      <span className="font-medium">{analysis.textMetrics.sentenceCount}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Avg Sentiment:</span>
+                      <span className="font-medium">{(analysis.textMetrics.avgSentimentPerSentence * 100).toFixed(1)}%</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Subjectivity:</span>
+                      <span className="font-medium">{(analysis.textMetrics.subjectivity * 100).toFixed(1)}%</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Polarity:</span>
+                      <span className="font-medium">{(analysis.textMetrics.polarity * 100).toFixed(1)}%</span>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Sentiment Trend</CardTitle>
+                    <CardDescription>Sentiment score progression across sentences.</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {analysis.sentimentTrend.map((point: any, index: number) => (
+                        <div key={index} className="flex items-center gap-3">
+                          <span className="w-16 text-sm text-muted-foreground">Sentence {point.sentence}:</span>
+                          <div className="h-2 flex-1 rounded-full bg-muted">
+                            <div
+                              className={`h-2 rounded-full ${
+                                point.sentiment > 0.6
+                                  ? "bg-green-500"
+                                  : point.sentiment > 0.4
+                                    ? "bg-yellow-500"
+                                    : "bg-destructive"
+                              }`}
+                              style={{ width: `${point.sentiment * 100}%` }}
+                            />
+                          </div>
+                          <span className="w-12 text-sm font-medium text-muted-foreground">{(point.sentiment * 100).toFixed(0)}%</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Lightbulb className="h-5 w-5 text-primary" />
+                    Key Insights
+                  </CardTitle>
+                  <CardDescription>Important findings from the sentiment analysis.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-3">
+                    {analysis.insights.map((insight: string, index: number) => (
+                      <li key={index} className="flex items-start gap-3 rounded-md border p-3 text-sm text-muted-foreground">
+                        <div className="h-2 w-2 flex-shrink-0 rounded-full bg-primary mt-2" />
+                        {insight}
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+
+              <Button
+                onClick={() => {
+                  setStep(1)
+                  setAnalysis(null)
+                  setText("")
+                }}
+                variant="outline"
+                className="w-full"
+              >
+                Analyze New Text
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
