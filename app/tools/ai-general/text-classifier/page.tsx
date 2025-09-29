@@ -6,7 +6,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { Tags, Zap, BarChart3 } from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Tags,
+  Zap,
+  BarChart3,
+  Heart,
+  Smile,
+  Meh,
+  Frown,
+  MessageSquareText,
+  Languages,
+  BookOpenText,
+  FileText,
+} from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 
 export default function TextClassifierPage() {
@@ -46,6 +59,8 @@ export default function TextClassifierPage() {
             { emotion: "Trust", intensity: 0.65 },
             { emotion: "Anticipation", intensity: 0.43 },
             { emotion: "Surprise", intensity: 0.21 },
+            { emotion: "Fear", intensity: 0.08 },
+            { emotion: "Sadness", intensity: 0.05 },
           ],
         },
         topic: {
@@ -94,325 +109,387 @@ export default function TextClassifierPage() {
     }, 2500)
   }
 
-  const getResultsForMode = () => {
-    if (!results) return null
-    return results[classificationMode]
+  const getSentimentIcon = (label: string) => {
+    switch (label.toLowerCase()) {
+      case "positive":
+        return <Smile className="h-4 w-4" />
+      case "neutral":
+        return <Meh className="h-4 w-4" />
+      case "negative":
+        return <Frown className="h-4 w-4" />
+      default:
+        return <Heart className="h-4 w-4" />
+    }
+  }
+
+  const getSentimentColorClass = (label: string) => {
+    switch (label.toLowerCase()) {
+      case "positive":
+        return "text-green-500 bg-green-500/10"
+      case "negative":
+        return "text-destructive bg-destructive/10"
+      case "neutral":
+        return "text-gray-500 bg-gray-500/10"
+      default:
+        return "text-primary bg-primary/10"
+    }
+  }
+
+  const getProgressColorClass = (score: number) => {
+    if (score > 0.7) return "bg-green-500"
+    if (score > 0.4) return "bg-yellow-500"
+    return "bg-destructive"
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">Text Classifier</h1>
-        <p className="text-gray-400">Classify text for sentiment, topics, intent, and more using AI analysis</p>
-      </div>
-
-      {step === 1 && (
-        <div className="space-y-6">
-          <Card className="bg-gray-900 border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Tags className="h-5 w-5" />
-                Text to Classify
-              </CardTitle>
-              <CardDescription>Enter the text you want to analyze and classify</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Textarea
-                placeholder="Enter your text here for classification..."
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                className="min-h-[200px] bg-gray-800 border-gray-700 text-white"
-              />
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gray-900 border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-white">Classification Mode</CardTitle>
-              <CardDescription>Choose what type of classification to perform</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {[
-                  { id: "sentiment", label: "Sentiment", desc: "Positive/Negative" },
-                  { id: "topic", label: "Topic", desc: "Subject Category" },
-                  { id: "intent", label: "Intent", desc: "User Purpose" },
-                  { id: "language", label: "Language", desc: "Language Detection" },
-                ].map((mode) => (
-                  <Button
-                    key={mode.id}
-                    variant={classificationMode === mode.id ? "default" : "outline"}
-                    onClick={() => setClassificationMode(mode.id)}
-                    className={
-                      classificationMode === mode.id
-                        ? "h-auto p-3 bg-blue-600 hover:bg-blue-700 flex-col"
-                        : "h-auto p-3 border-gray-700 text-gray-300 hover:bg-gray-800 flex-col"
-                    }
-                  >
-                    <div className="font-medium">{mode.label}</div>
-                    <div className="text-xs opacity-70">{mode.desc}</div>
-                  </Button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Button onClick={classifyText} className="w-full bg-blue-600 hover:bg-blue-700" size="lg">
-            <Zap className="h-4 w-4 mr-2" />
-            Classify Text
-          </Button>
+    <div className="flex min-h-screen w-full flex-col">
+      <div className="flex flex-1 flex-col gap-8 p-6 md:p-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold">Text Classifier</h1>
+            <p className="text-muted-foreground">Classify text for sentiment, topics, intent, and more using AI analysis.</p>
+          </div>
         </div>
-      )}
 
-      {step === 2 && (
-        <Card className="bg-gray-900 border-gray-800">
-          <CardContent className="p-8 text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-            <h3 className="text-xl font-semibold text-white mb-2">Classifying Text</h3>
-            <p className="text-gray-400">AI is analyzing your text for classification...</p>
-          </CardContent>
-        </Card>
-      )}
-
-      {step === 3 && results && (
-        <div className="space-y-6">
-          <Card className="bg-gray-900 border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-white">Classification Mode</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {[
-                  { id: "sentiment", label: "Sentiment" },
-                  { id: "topic", label: "Topic" },
-                  { id: "intent", label: "Intent" },
-                  { id: "language", label: "Language" },
-                ].map((mode) => (
-                  <Button
-                    key={mode.id}
-                    variant={classificationMode === mode.id ? "default" : "outline"}
-                    onClick={() => setClassificationMode(mode.id)}
-                    className={
-                      classificationMode === mode.id
-                        ? "bg-blue-600 hover:bg-blue-700"
-                        : "border-gray-700 text-gray-300 hover:bg-gray-800"
-                    }
-                  >
-                    {mode.label}
-                  </Button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {classificationMode === "sentiment" && (
+        <div className="grid gap-8">
+          {step === 1 && (
             <div className="space-y-6">
-              <Card className="bg-gray-900 border-gray-800">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-white flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5" />
-                    Sentiment Analysis
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="h-5 w-5 text-primary" />
+                    Text to Classify
                   </CardTitle>
+                  <CardDescription>Enter the text you want to analyze and classify below.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="mb-4">
-                    <div className="text-center mb-4">
-                      <div className="text-3xl font-bold text-green-400">{results.sentiment.primary}</div>
-                      <div className="text-gray-400">
-                        Confidence: {(results.sentiment.confidence * 100).toFixed(1)}%
-                      </div>
-                    </div>
-                    <div className="space-y-3">
-                      {results.sentiment.scores.map((score: any, index: number) => (
-                        <div key={index} className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div
-                              className={`w-3 h-3 rounded-full bg-${score.color}-500`}
-                              style={{
-                                backgroundColor:
-                                  score.color === "green" ? "#10B981" : score.color === "red" ? "#EF4444" : "#6B7280",
-                              }}
-                            />
-                            <span className="text-white">{score.label}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-gray-300 text-sm">{(score.score * 100).toFixed(1)}%</span>
-                            <div className="w-20 bg-gray-700 rounded-full h-2">
-                              <div
-                                className="h-2 rounded-full"
-                                style={{
-                                  width: `${score.score * 100}%`,
-                                  backgroundColor:
-                                    score.color === "green" ? "#10B981" : score.color === "red" ? "#EF4444" : "#6B7280",
-                                }}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  <Textarea
+                    placeholder="Enter your text here for classification..."
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    className="min-h-[200px]"
+                  />
+                  <div className="mt-2 text-sm text-muted-foreground">{text.length} characters</div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-gray-900 border-gray-800">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-white">Emotional Breakdown</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Zap className="h-5 w-5 text-primary" />
+                    Classification Mode
+                  </CardTitle>
+                  <CardDescription>Choose what type of classification to perform.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    {results.sentiment.emotions.map((emotion: any, index: number) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <span className="text-white">{emotion.emotion}</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-300 text-sm">{(emotion.intensity * 100).toFixed(0)}%</span>
-                          <Progress value={emotion.intensity * 100} className="w-20" />
-                        </div>
-                      </div>
+                  <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+                    {[
+                      { id: "sentiment", label: "Sentiment", desc: "Positive/Negative" },
+                      { id: "topic", label: "Topic", desc: "Subject Category" },
+                      { id: "intent", label: "Intent", desc: "User Purpose" },
+                      { id: "language", label: "Language", desc: "Language Detection" },
+                    ].map((mode) => (
+                      <Button
+                        key={mode.id}
+                        variant={classificationMode === mode.id ? "default" : "outline"}
+                        onClick={() => setClassificationMode(mode.id)}
+                        className="h-auto flex-col p-3"
+                      >
+                        <div className="font-medium">{mode.label}</div>
+                        <div className="text-xs opacity-70">{mode.desc}</div>
+                      </Button>
                     ))}
                   </div>
                 </CardContent>
               </Card>
+
+              <Button onClick={classifyText} className="w-full" size="lg" disabled={loading}>
+                {loading ? (
+                  <>
+                    <Zap className="mr-2 h-4 w-4 animate-bounce" />
+                    Classifying Text...
+                  </>
+                ) : (
+                  <>
+                    <Tags className="mr-2 h-4 w-4" />
+                    Classify Text
+                  </>
+                )}
+              </Button>
             </div>
           )}
 
-          {classificationMode === "topic" && (
-            <div className="space-y-6">
-              <Card className="bg-gray-900 border-gray-800">
-                <CardHeader>
-                  <CardTitle className="text-white">Topic Classification</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="mb-4 text-center">
-                    <div className="text-3xl font-bold text-blue-400">{results.topic.primary}</div>
-                    <div className="text-gray-400">Confidence: {(results.topic.confidence * 100).toFixed(1)}%</div>
-                  </div>
-                  <div className="space-y-3">
-                    {results.topic.categories.map((category: any, index: number) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <span className="text-white">{category.category}</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-300 text-sm">{(category.score * 100).toFixed(1)}%</span>
-                          <Progress value={category.score * 100} className="w-20" />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gray-900 border-gray-800">
-                <CardHeader>
-                  <CardTitle className="text-white">Key Topics</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {results.topic.keywords.map((keyword: string, index: number) => (
-                      <Badge key={index} variant="outline" className="border-blue-500 text-blue-400">
-                        {keyword}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-
-          {classificationMode === "intent" && (
-            <Card className="bg-gray-900 border-gray-800">
-              <CardHeader>
-                <CardTitle className="text-white">Intent Classification</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="mb-4 text-center">
-                  <div className="text-3xl font-bold text-purple-400">{results.intent.primary}</div>
-                  <div className="text-gray-400">Confidence: {(results.intent.confidence * 100).toFixed(1)}%</div>
-                </div>
-                <div className="space-y-3">
-                  {results.intent.intents.map((intent: any, index: number) => (
-                    <div key={index} className="flex items-center justify-between">
-                      <span className="text-white">{intent.intent}</span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-gray-300 text-sm">{(intent.score * 100).toFixed(1)}%</span>
-                        <Progress value={intent.score * 100} className="w-20" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
+          {step === 2 && (
+            <Card className="flex h-[300px] items-center justify-center">
+              <CardContent className="text-center">
+                <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-primary mx-auto mb-4" />
+                <h3 className="text-xl font-semibold">Classifying Text</h3>
+                <p className="text-muted-foreground">AI is analyzing your text for classification...</p>
               </CardContent>
             </Card>
           )}
 
-          {classificationMode === "language" && (
+          {step === 3 && results && (
             <div className="space-y-6">
-              <Card className="bg-gray-900 border-gray-800">
-                <CardHeader>
-                  <CardTitle className="text-white">Language Detection</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="mb-4 text-center">
-                    <div className="text-3xl font-bold text-teal-400">{results.language.detected}</div>
-                    <div className="text-gray-400">Confidence: {(results.language.confidence * 100).toFixed(1)}%</div>
-                  </div>
-                  <div className="space-y-2">
-                    {results.language.alternatives.map((lang: any, index: number) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <span className="text-white">{lang.language}</span>
-                        <span className="text-gray-300 text-sm">{(lang.score * 100).toFixed(1)}%</span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+              <Tabs defaultValue={classificationMode}>
+                <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
+                  <TabsTrigger value="sentiment" onClick={() => setClassificationMode("sentiment")}>
+                    Sentiment
+                  </TabsTrigger>
+                  <TabsTrigger value="topic" onClick={() => setClassificationMode("topic")}>
+                    Topic
+                  </TabsTrigger>
+                  <TabsTrigger value="intent" onClick={() => setClassificationMode("intent")}>
+                    Intent
+                  </TabsTrigger>
+                  <TabsTrigger value="language" onClick={() => setClassificationMode("language")}>
+                    Language
+                  </TabsTrigger>
+                </TabsList>
 
-              <Card className="bg-gray-900 border-gray-800">
-                <CardHeader>
-                  <CardTitle className="text-white">Readability Analysis</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                    <div className="text-center">
-                      <div className="text-xl font-bold text-blue-400">{results.readability.score}</div>
-                      <div className="text-xs text-gray-400">Readability Score</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-xl font-bold text-green-400">{results.readability.metrics.sentences}</div>
-                      <div className="text-xs text-gray-400">Sentences</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-xl font-bold text-purple-400">{results.readability.metrics.words}</div>
-                      <div className="text-xs text-gray-400">Words</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-xl font-bold text-orange-400">
-                        {results.readability.metrics.avgWordsPerSentence}
+                <TabsContent value="sentiment" className="mt-6">
+                  <div className="space-y-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <BarChart3 className="h-5 w-5 text-primary" />
+                          Sentiment Analysis
+                        </CardTitle>
+                        <CardDescription>Overall emotional tone and breakdown.</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="mb-6 text-center">
+                          <div className={`mb-2 text-5xl font-bold ${getSentimentColorClass(results.sentiment.primary)}`}>
+                            {results.sentiment.primary}
+                          </div>
+                          <div className="text-muted-foreground">
+                            Confidence: {(results.sentiment.confidence * 100).toFixed(1)}%
+                          </div>
+                        </div>
+                        <div className="grid gap-4">
+                          {results.sentiment.scores.map((score: any, index: number) => (
+                            <div key={index} className="flex items-center justify-between rounded-md border p-3">
+                              <div className="flex items-center gap-3">
+                                <Badge variant="secondary" className={`flex items-center gap-1 ${getSentimentColorClass(score.label)}`}>
+                                  {getSentimentIcon(score.label)} <span className="font-medium">{score.label}</span>
+                                </Badge>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <span className="w-12 text-sm text-muted-foreground">{(score.score * 100).toFixed(1)}%</span>
+                                <div className="h-2 w-24 rounded-full bg-muted">
+                                  <div
+                                    className={`h-2 rounded-full ${getProgressColorClass(score.score)}`}
+                                    style={{ width: `${score.score * 100}%` }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Heart className="h-5 w-5 text-primary" />
+                          Emotional Breakdown
+                        </CardTitle>
+                        <CardDescription>Intensity of various emotions detected.</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+                          {results.sentiment.emotions.map((emotion: any, index: number) => (
+                            <div key={index} className="rounded-md border p-3 text-center">
+                              <div className="mb-1 text-sm font-medium text-muted-foreground">{emotion.emotion}</div>
+                              <div className="mb-2 text-2xl font-bold text-primary">{(emotion.intensity * 100).toFixed(0)}%</div>
+                              <Progress value={emotion.intensity * 100} className="h-2" />
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="topic" className="mt-6">
+                  <div className="space-y-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <MessageSquareText className="h-5 w-5 text-primary" />
+                          Topic Classification
+                        </CardTitle>
+                        <CardDescription>Primary topics and their relevance scores.</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="mb-6 text-center">
+                          <div className="mb-2 text-5xl font-bold text-primary">{results.topic.primary}</div>
+                          <div className="text-muted-foreground">
+                            Confidence: {(results.topic.confidence * 100).toFixed(1)}%
+                          </div>
+                        </div>
+                        <div className="grid gap-4">
+                          {results.topic.categories.map((category: any, index: number) => (
+                            <div key={index} className="flex items-center justify-between rounded-md border p-3">
+                              <span className="font-medium text-muted-foreground">{category.category}</span>
+                              <div className="flex items-center gap-3">
+                                <span className="w-12 text-sm text-muted-foreground">{(category.score * 100).toFixed(1)}%</span>
+                                <div className="h-2 w-24 rounded-full bg-muted">
+                                  <div
+                                    className={`h-2 rounded-full ${getProgressColorClass(category.score)}`}
+                                    style={{ width: `${category.score * 100}%` }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Tags className="h-5 w-5 text-primary" />
+                          Key Keywords
+                        </CardTitle>
+                        <CardDescription>Extracted keywords from the text.</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex flex-wrap gap-2">
+                          {results.topic.keywords.map((keyword: string, index: number) => (
+                            <Badge key={index} variant="secondary">
+                              {keyword}
+                            </Badge>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="intent" className="mt-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Zap className="h-5 w-5 text-primary" />
+                        Intent Classification
+                      </CardTitle>
+                      <CardDescription>User intent detected from the text.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="mb-6 text-center">
+                        <div className="mb-2 text-5xl font-bold text-primary">{results.intent.primary}</div>
+                        <div className="text-muted-foreground">
+                          Confidence: {(results.intent.confidence * 100).toFixed(1)}%
+                        </div>
                       </div>
-                      <div className="text-xs text-gray-400">Avg Words/Sentence</div>
-                    </div>
+                      <div className="grid gap-4">
+                        {results.intent.intents.map((intent: any, index: number) => (
+                          <div key={index} className="flex items-center justify-between rounded-md border p-3">
+                            <span className="font-medium text-muted-foreground">{intent.intent}</span>
+                            <div className="flex items-center gap-3">
+                              <span className="w-12 text-sm text-muted-foreground">{(intent.score * 100).toFixed(1)}%</span>
+                              <div className="h-2 w-24 rounded-full bg-muted">
+                                <div
+                                  className={`h-2 rounded-full ${getProgressColorClass(intent.score)}`}
+                                  style={{ width: `${intent.score * 100}%` }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="language" className="mt-6">
+                  <div className="space-y-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Languages className="h-5 w-5 text-primary" />
+                          Language Detection
+                        </CardTitle>
+                        <CardDescription>Detected language and confidence scores.</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="mb-6 text-center">
+                          <div className="mb-2 text-5xl font-bold text-primary">{results.language.detected}</div>
+                          <div className="text-muted-foreground">
+                            Confidence: {(results.language.confidence * 100).toFixed(1)}%
+                          </div>
+                        </div>
+                        <div className="grid gap-4">
+                          {results.language.alternatives.map((lang: any, index: number) => (
+                            <div key={index} className="flex items-center justify-between rounded-md border p-3">
+                              <span className="font-medium text-muted-foreground">{lang.language}</span>
+                              <span className="w-12 text-sm text-muted-foreground">{(lang.score * 100).toFixed(1)}%</span>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <BookOpenText className="h-5 w-5 text-primary" />
+                          Readability Analysis
+                        </CardTitle>
+                        <CardDescription>Metrics on text complexity and readability level.</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+                          <div className="rounded-md border p-4 text-center">
+                            <div className="mb-1 text-sm font-medium text-muted-foreground">Score</div>
+                            <div className="text-2xl font-bold text-primary">{results.readability.score}</div>
+                          </div>
+                          <div className="rounded-md border p-4 text-center">
+                            <div className="mb-1 text-sm font-medium text-muted-foreground">Sentences</div>
+                            <div className="text-2xl font-bold text-primary">
+                              {results.readability.metrics.sentences}
+                            </div>
+                          </div>
+                          <div className="rounded-md border p-4 text-center">
+                            <div className="mb-1 text-sm font-medium text-muted-foreground">Words</div>
+                            <div className="text-2xl font-bold text-primary">{results.readability.metrics.words}</div>
+                          </div>
+                          <div className="rounded-md border p-4 text-center">
+                            <div className="mb-1 text-sm font-medium text-muted-foreground">Avg Words/Sentence</div>
+                            <div className="text-2xl font-bold text-primary">
+                              {results.readability.metrics.avgWordsPerSentence}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <Badge variant="secondary" className="text-primary">
+                            {results.readability.level}
+                          </Badge>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
-                  <div className="text-center">
-                    <Badge variant="outline" className="border-teal-500 text-teal-400">
-                      {results.readability.level}
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
+                </TabsContent>
+              </Tabs>
+
+              <Button
+                onClick={() => {
+                  setStep(1)
+                  setResults(null)
+                  setText("")
+                }}
+                variant="outline"
+                className="w-full"
+              >
+                Classify New Text
+              </Button>
             </div>
           )}
-
-          <Button
-            onClick={() => {
-              setStep(1)
-              setResults(null)
-              setText("")
-            }}
-            variant="outline"
-            className="w-full border-gray-700 text-gray-300 hover:bg-gray-800"
-          >
-            Classify New Text
-          </Button>
         </div>
-      )}
+      </div>
     </div>
   )
 }
