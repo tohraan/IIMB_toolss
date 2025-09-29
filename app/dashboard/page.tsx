@@ -30,10 +30,21 @@ import {
 
 const toolCategories = [
   {
+    name: "AI General",
+    description: "Research, analysis, and general AI assistance",
+    icon: Bot,
+    tools: [
+      { name: "Research Summarizer", href: "/tools/ai-general/research-summarizer", icon: Search },
+      { name: "Dataset Analyzer", href: "/tools/ai-general/dataset-analyzer", icon: BarChart3 },
+      { name: "Business Idea Validator", href: "/tools/ai-general/idea-validator", icon: Lightbulb },
+      { name: "AI Q&A Sandbox", href: "/tools/ai-general/qa-sandbox", icon: HelpCircle },
+      { name: "Competitor Snapshot", href: "/tools/ai-general/competitor-snapshot", icon: Building },
+    ],
+  },
+  {
     name: "Cloud Dev",
     description: "Development and infrastructure tools",
     icon: Cloud,
-    color: "text-blue-400",
     tools: [
       { name: "API Tester Lite", href: "/tools/cloud-dev/api-tester", icon: TestTube },
       { name: "SQL Query Assistant", href: "/tools/cloud-dev/sql-assistant", icon: Database },
@@ -46,7 +57,6 @@ const toolCategories = [
     name: "Marketing",
     description: "Content creation and marketing automation",
     icon: Megaphone,
-    color: "text-green-400",
     tools: [
       { name: "Ad Copy Generator", href: "/tools/marketing/ad-copy", icon: PenTool },
       { name: "Persona Builder", href: "/tools/marketing/persona-builder", icon: Users },
@@ -59,26 +69,12 @@ const toolCategories = [
     name: "Productivity & Design",
     description: "Workflow optimization and creative tools",
     icon: Zap,
-    color: "text-yellow-400",
     tools: [
       { name: "Meeting Notes Summarizer", href: "/tools/productivity-design/meeting-notes", icon: StickyNote },
       { name: "Presentation Draft Maker", href: "/tools/productivity-design/presentation", icon: Presentation },
       { name: "Task Breakdown Tool", href: "/tools/productivity-design/task-breakdown", icon: ListTodo },
       { name: "Resume Optimizer", href: "/tools/productivity-design/resume-optimizer", icon: FileUser },
       { name: "Brand Kit Starter", href: "/tools/productivity-design/brand-kit", icon: Palette },
-    ],
-  },
-  {
-    name: "AI General",
-    description: "Research, analysis, and general AI assistance",
-    icon: Bot,
-    color: "text-purple-400",
-    tools: [
-      { name: "Research Summarizer", href: "/tools/ai-general/research-summarizer", icon: Search },
-      { name: "Dataset Analyzer", href: "/tools/ai-general/dataset-analyzer", icon: BarChart3 },
-      { name: "Business Idea Validator", href: "/tools/ai-general/idea-validator", icon: Lightbulb },
-      { name: "AI Q&A Sandbox", href: "/tools/ai-general/qa-sandbox", icon: HelpCircle },
-      { name: "Competitor Snapshot", href: "/tools/ai-general/competitor-snapshot", icon: Building },
     ],
   },
 ]
@@ -93,37 +89,31 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {toolCategories.map((category) => {
-          const CategoryIcon = category.icon
-          return (
-            <Card key={category.name} className="h-fit">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3">
-                  <CategoryIcon className={`h-6 w-6 ${category.color}`} />
-                  {category.name}
-                </CardTitle>
-                <CardDescription>{category.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 gap-2">
-                  {category.tools.map((tool) => {
-                    const ToolIcon = tool.icon
-                    return (
-                      <Button key={tool.href} variant="ghost" className="justify-start h-auto p-3" asChild>
-                        <Link href={tool.href}>
-                          <ToolIcon className="mr-3 h-4 w-4" />
-                          <span className="text-sm">{tool.name}</span>
-                        </Link>
-                      </Button>
-                    )
-                  })}
-                </div>
-              </CardContent>
-            </Card>
-          )
-        })}
-      </div>
+      {toolCategories.map((category) => (
+        <section key={category.name} className="space-y-4">
+          <div className="flex items-center gap-3">
+            <category.icon className="h-6 w-6 text-primary" />
+            <h2 className="text-2xl font-bold">{category.name}</h2>
+          </div>
+          <p className="text-muted-foreground">{category.description}</p>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {category.tools.map((tool) => (
+              <Card key={tool.href}>
+                <Link href={tool.href}>
+                  <CardHeader className="flex-row items-center gap-4 py-4">
+                    <tool.icon className="h-6 w-6 text-primary" />
+                    <CardTitle className="text-lg font-semibold">{tool.name}</CardTitle>
+                  </CardHeader>
+                  {/* Optional: Add a CardContent with a description if tools have them */}
+                  {/* <CardContent>
+                    <CardDescription>Short description of the tool's function.</CardDescription>
+                  </CardContent> */}
+                </Link>
+              </Card>
+            ))}
+          </div>
+        </section>
+      ))}
     </div>
   )
 }

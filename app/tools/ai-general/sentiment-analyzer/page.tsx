@@ -186,7 +186,7 @@ export default function SentimentAnalyzerPage() {
           {step === 2 && (
             <Card className="flex h-[300px] items-center justify-center">
               <CardContent className="text-center">
-                <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-primary mx-auto mb-4" />
+                <div className="h-12 w-12 animate-spin border-b-2 border-primary mx-auto mb-4" />
                 <h3 className="text-xl font-semibold">Analyzing Sentiment</h3>
                 <p className="text-muted-foreground">AI is processing the emotional tone of your text...</p>
               </CardContent>

@@ -120,7 +120,7 @@ export default function DatasetAnalyzerPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="grid gap-4">
-                    <div className="relative rounded-lg border-2 border-dashed border-border p-6 text-center transition-colors hover:border-primary/50">
+                    <div className="relative border-2 border-dashed border-border p-6 text-center transition-colors hover:border-primary/50">
                       <Upload className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
                       <p className="mb-1 text-sm text-muted-foreground">Drag and drop your file here, or</p>
                       <label htmlFor="file-upload" className="cursor-pointer text-sm font-medium text-primary hover:underline">
@@ -129,7 +129,7 @@ export default function DatasetAnalyzerPage() {
                       </label>
                     </div>
                     {file && (
-                      <div className="flex items-center justify-between rounded-md bg-secondary/50 p-3 text-sm">
+                      <div className="flex items-center justify-between border bg-secondary/50 p-3 text-sm">
                         <span className="font-medium">{file.name}</span>
                         <span className="text-muted-foreground">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
                       </div>
@@ -157,7 +157,7 @@ export default function DatasetAnalyzerPage() {
           {step === 2 && (
             <Card className="flex h-[300px] items-center justify-center">
               <CardContent className="text-center">
-                <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-primary mx-auto mb-4" />
+                <div className="h-12 w-12 animate-spin border-b-2 border-primary mx-auto mb-4" />
                 <h3 className="text-xl font-semibold">Analyzing Dataset</h3>
                 <p className="text-muted-foreground">Processing your data and generating insights...</p>
               </CardContent>
@@ -188,19 +188,19 @@ export default function DatasetAnalyzerPage() {
                     </CardHeader>
                     <CardContent>
                       <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-                        <div className="rounded-md border p-4 text-center">
+                        <div className="border p-4 text-center">
                           <div className="text-2xl font-bold text-primary">{analysis.overview.rows.toLocaleString()}</div>
                           <div className="text-sm text-muted-foreground">Rows</div>
                         </div>
-                        <div className="rounded-md border p-4 text-center">
+                        <div className="border p-4 text-center">
                           <div className="text-2xl font-bold text-primary">{analysis.overview.columns}</div>
                           <div className="text-sm text-muted-foreground">Columns</div>
                         </div>
-                        <div className="rounded-md border p-4 text-center">
+                        <div className="border p-4 text-center">
                           <div className="text-2xl font-bold text-primary">{analysis.overview.fileSize}</div>
                           <div className="text-sm text-muted-foreground">File Size</div>
                         </div>
-                        <div className="rounded-md border p-4 text-center">
+                        <div className="border p-4 text-center">
                           <div className="text-2xl font-bold text-primary">{analysis.qualityScore}%</div>
                           <div className="text-sm text-muted-foreground">Quality Score</div>
                         </div>
@@ -209,13 +209,13 @@ export default function DatasetAnalyzerPage() {
                         <h3 className="text-sm font-medium">Data Types</h3>
                         <div className="flex flex-wrap gap-2">
                           <Badge variant="secondary" className="flex items-center gap-1">
-                            <span className="h-2 w-2 rounded-full bg-blue-500" /> {analysis.overview.dataTypes.numeric} Numeric
+                            <span className="h-2 w-2 bg-blue-500" /> {analysis.overview.dataTypes.numeric} Numeric
                           </Badge>
                           <Badge variant="secondary" className="flex items-center gap-1">
-                            <span className="h-2 w-2 rounded-full bg-green-500" /> {analysis.overview.dataTypes.categorical} Categorical
+                            <span className="h-2 w-2 bg-green-500" /> {analysis.overview.dataTypes.categorical} Categorical
                           </Badge>
                           <Badge variant="secondary" className="flex items-center gap-1">
-                            <span className="h-2 w-2 rounded-full bg-purple-500" /> {analysis.overview.dataTypes.datetime} DateTime
+                            <span className="h-2 w-2 bg-purple-500" /> {analysis.overview.dataTypes.datetime} DateTime
                           </Badge>
                         </div>
                       </div>
@@ -230,7 +230,7 @@ export default function DatasetAnalyzerPage() {
                       <CardDescription>Detailed breakdown of each column in your dataset.</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <ScrollArea className="h-[400px] w-full rounded-md border">
+                      <ScrollArea className="h-[400px] w-full border">
                         <div className="relative w-full overflow-auto">
                           <Table>
                             <TableHeader className="sticky top-0 bg-card/80 backdrop-blur-sm">
@@ -302,11 +302,11 @@ export default function DatasetAnalyzerPage() {
                           <Progress value={analysis.statistics.completeness} className="h-2" />
                         </div>
                         <div className="grid grid-cols-2 gap-4 text-center">
-                          <div className="rounded-md border p-4">
+                          <div className="border p-4">
                             <div className="text-2xl font-bold text-destructive">{analysis.statistics.duplicates}</div>
                             <div className="text-sm text-muted-foreground">Duplicates</div>
                           </div>
-                          <div className="rounded-md border p-4">
+                          <div className="border p-4">
                             <div className="text-2xl font-bold text-orange-400">{analysis.statistics.outliers}</div>
                             <div className="text-sm text-muted-foreground">Outliers</div>
                           </div>
@@ -325,15 +325,15 @@ export default function DatasetAnalyzerPage() {
                       <CardContent>
                         <div className="space-y-3">
                           {analysis.statistics.correlations.map((corr: any, index: number) => (
-                            <div key={index} className="flex items-center justify-between rounded-md border p-3">
+                            <div key={index} className="flex items-center justify-between border p-3">
                               <div className="text-sm font-medium">
                                 {corr.var1} <span className="text-muted-foreground">×</span> {corr.var2}
                               </div>
                               <div className="flex items-center gap-2">
                                 <div className="text-sm text-muted-foreground">{(corr.correlation * 100).toFixed(0)}%</div>
-                                <div className="h-2 w-20 rounded-full bg-muted">
+                                <div className="h-2 w-20 bg-muted">
                                   <div
-                                    className="h-2 rounded-full bg-primary"
+                                    className="h-2 bg-primary"
                                     style={{ width: `${Math.abs(corr.correlation) * 100}%` }}
                                   />
                                 </div>
@@ -358,8 +358,8 @@ export default function DatasetAnalyzerPage() {
                     <CardContent>
                       <ul className="space-y-3">
                         {analysis.insights.map((insight: string, index: number) => (
-                          <li key={index} className="flex items-start gap-3 rounded-md border p-3 text-sm text-muted-foreground">
-                            <div className="h-2 w-2 flex-shrink-0 rounded-full bg-primary mt-2" />
+                          <li key={index} className="flex items-start gap-3 border p-3 text-sm text-muted-foreground">
+                            <div className="h-2 w-2 flex-shrink-0 bg-primary mt-2" />
                             {insight}
                           </li>
                         ))}
@@ -380,8 +380,8 @@ export default function DatasetAnalyzerPage() {
                     <CardContent>
                       <ul className="space-y-3">
                         {analysis.recommendations.map((rec: string, index: number) => (
-                          <li key={index} className="flex items-start gap-3 rounded-md border p-3 text-sm text-muted-foreground">
-                            <div className="h-2 w-2 flex-shrink-0 rounded-full bg-green-500 mt-2" />
+                          <li key={index} className="flex items-start gap-3 border p-3 text-sm text-muted-foreground">
+                            <div className="h-2 w-2 flex-shrink-0 bg-green-500 mt-2" />
                             {rec}
                           </li>
                         ))}

@@ -40,10 +40,12 @@ import {
   Trash,
   HardDrive,
   LayoutGrid,
+  ChevronDown, // Added ChevronDown for collapsible categories
 } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible" // Added Collapsible components
 
 const toolCategories = {
   "cloud-dev": {
@@ -101,6 +103,13 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
   const router = useRouter()
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(() => {
+    const initialOpen: Record<string, boolean> = {}
+    Object.keys(toolCategories).forEach(key => {
+      initialOpen[key] = true // All categories open by default
+    })
+    return initialOpen
+  })
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -124,6 +133,13 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
       localStorage.removeItem("user")
     } catch {}
     router.push("/")
+  }
+
+  const toggleCategory = (categoryKey: string) => {
+    setOpenCategories(prev => ({
+      ...prev,
+      [categoryKey]: !prev[categoryKey]
+    }))
   }
 
   const SidebarContent = (
@@ -204,14 +220,25 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
         {Object.entries(toolCategories).map(([key, category]) => {
           const CategoryIcon = category.icon
           const isActive = currentCategory === key || pathname.includes(`/tools/${key}`)
+          const isOpen = openCategories[key]
 
           return (
-            <div key={key} className="space-y-1">
-              <div className="flex items-center gap-2 px-2 py-1 text-sm font-medium text-sidebar-foreground">
-                <CategoryIcon className="h-4 w-4" />
-                {!isCollapsed && <span>{category.name}</span>}
-              </div>
-              <div className={`${isCollapsed ? "ml-0" : "ml-6"} space-y-1`}>
+            <Collapsible key={key} open={isOpen} onOpenChange={() => toggleCategory(key)} className="space-y-1">
+              <CollapsibleTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className={`w-full justify-between font-medium ${isCollapsed ? "justify-center" : ""}`}
+                >
+                  <div className="flex items-center gap-2">
+                    <CategoryIcon className="h-4 w-4" />
+                    {!isCollapsed && <span>{category.name}</span>}
+                  </div>
+                  {!isCollapsed && (
+                    <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : "rotate-0"}`} />
+                  )}
+                </Button>
+              </CollapsibleTrigger>
+              <CollapsibleContent className={`${isCollapsed ? "ml-0 text-center" : "ml-6"} space-y-1`}>
                 {category.tools.map((tool) => {
                   const ToolIcon = tool.icon
                   return (
@@ -235,8 +262,8 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
                     </TooltipProvider>
                   )
                 })}
-              </div>
-            </div>
+              </CollapsibleContent>
+            </Collapsible>
           )
         })}
       </div>

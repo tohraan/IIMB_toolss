@@ -91,7 +91,7 @@ export function DashboardHeader() {
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+            <Button variant="ghost" className="relative h-8 w-8">
               <Avatar className="h-8 w-8">
                 <AvatarFallback>
                   {user?.username?.charAt(0).toUpperCase() || <User className="h-4 w-4" />}
@@ -100,7 +100,7 @@ export function DashboardHeader() {
               <span className="sr-only">Toggle user menu</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align="end" forceMount>
+          <DropdownMenuContent className="w-56 border shadow-lg" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none">Account</p>
