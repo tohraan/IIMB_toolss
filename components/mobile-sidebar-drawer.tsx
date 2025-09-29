@@ -39,10 +39,12 @@ import {
   Trash,
   HardDrive,
   ChevronDown, // Added ChevronDown for collapsible categories
+  LayoutGrid,
 } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible" // Added Collapsible components
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 const toolCategories = {
   "cloud-dev": {
@@ -95,7 +97,7 @@ interface DashboardSidebarProps {
   currentCategory?: string
 }
 
-export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
+export function MobileSidebarDrawer() {
   const pathname = usePathname()
   const router = useRouter()
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -112,13 +114,11 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
     if (typeof window !== "undefined") {
       const checkMobile = () => window.innerWidth < 768
       setIsMobile(checkMobile())
-      setIsCollapsed(false) // Desktop sidebar is always expanded by default now
+      setIsCollapsed(checkMobile())
 
       const handleResize = () => {
         setIsMobile(checkMobile())
-        if (!checkMobile()) {
-          setIsCollapsed(false) // Ensure desktop sidebar remains expanded
-        }
+        setIsCollapsed(checkMobile())
       }
 
       window.addEventListener("resize", handleResize)
@@ -270,86 +270,51 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
   )
 
   return (
-    <div className={`hidden md:flex h-full ${isCollapsed ? "w-16" : "w-72"} flex-col bg-sidebar border-r border-sidebar-border transition-all duration-200`}>
-      <div className="flex h-14 items-center justify-between border-b border-sidebar-border px-2">
-        <Link href="/dashboard" className="flex items-center gap-2 font-semibold px-2">
-          <Bot className="h-6 w-6 text-sidebar-primary" />
-          {!isCollapsed && <span className="text-body">AI Tools Platform</span>}
-        </Link>
-        <Button variant="ghost" size="icon" aria-label="Toggle sidebar" onClick={() => setIsCollapsed((v) => !v)}>
-          {isCollapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="ghost" size="icon" className="md:hidden absolute top-4 right-4 z-50">
+          <LayoutGrid className="h-7 w-7" />
+          <span className="sr-only">Toggle sidebar</span>
         </Button>
-      </div>
-      {SidebarContent}
-      <div className="border-t border-sidebar-border p-4">
-        <div className="space-y-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" className="w-full justify-start" asChild>
-                  <Link href="/settings">
-                    <Settings className="h-5 w-5" />
-                    {!isCollapsed && <span className="ml-2 text-body">Settings</span>}
-                  </Link>
-                </Button>
-              </TooltipTrigger>
-              {isCollapsed && <TooltipContent side="right" className="text-body">Settings</TooltipContent>}
-            </Tooltip>
-          </TooltipProvider>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" className="w-full justify-start" asChild>
-                  <Link href="/deleted-files">
-                    <Trash className="h-5 w-5" />
-                    {!isCollapsed && <span className="ml-2 text-body">Deleted Files</span>}
-                  </Link>
-                </Button>
-              </TooltipTrigger>
-              {isCollapsed && <TooltipContent side="right" className="text-body">Deleted Files</TooltipContent>}
-            </Tooltip>
-          </TooltipProvider>
-
-          <div className="mt-4 space-y-2">
-            {!isCollapsed && (
-              <div className="px-2">
+      </SheetTrigger>
+      <SheetContent side="right" className="p-0 w-72">
+        <div className="flex h-full w-full flex-col bg-sidebar border-r border-sidebar-border">
+          <div className="flex h-14 items-center border-b border-sidebar-border px-4">
+            <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
+              <Bot className="h-6 w-6 text-sidebar-primary" />
+              <span className="text-body">AI Tools Platform</span>
+            </Link>
+          </div>
+          {SidebarContent}
+          <div className="border-t border-sidebar-border p-4">
+            <div className="space-y-2">
+              <Button variant="ghost" className="w-full justify-start" asChild>
+                <Link href="/settings">
+                  <Settings className="mr-2 h-5 w-5" />
+                  <span className="text-body">Settings</span>
+                </Link>
+              </Button>
+              <Button variant="ghost" className="w-full justify-start" asChild>
+                <Link href="/deleted-files">
+                  <Trash className="mr-2 h-5 w-5" />
+                  <span className="text-body">Deleted Files</span>
+                </Link>
+              </Button>
+              <div className="mt-4 space-y-2 px-2">
                 <div className="flex items-center justify-between text-body text-muted-foreground mb-2">
                   <span>Storage</span>
                   <span className="font-medium">42 GB / 256 GB</span>
                 </div>
                 <Progress value={42 / 256 * 100} className="h-3" />
               </div>
-            )}
-            {isCollapsed && (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="ghost" className="w-full justify-center">
-                      <HardDrive className="h-5 w-5" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="right" className="text-body">Storage: 42 GB / 256 GB</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            )}
+              <Button variant="ghost" className="w-full justify-start" onClick={handleLogout}>
+                <LogOut className="mr-2 h-5 w-5" />
+                <span className="text-body">Sign Out</span>
+              </Button>
+            </div>
           </div>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" className="w-full justify-start" onClick={handleLogout}>
-                  <LogOut className="h-5 w-5" />
-                  {!isCollapsed && <span className="ml-2 text-body">Sign Out</span>}
-                </Button>
-              </TooltipTrigger>
-              {isCollapsed && <TooltipContent side="right" className="text-body">Sign Out</TooltipContent>}
-            </Tooltip>
-          </TooltipProvider>
         </div>
-      </div>
-    </div>
+      </SheetContent>
+    </Sheet>
   )
 }
-
-export default DashboardSidebar
