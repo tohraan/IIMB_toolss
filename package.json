@@ -65,7 +65,7 @@
     "zod": "3.25.67"
   },
   "engines": {
-    "node": "18.x"
+    "node": "22.x"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.9",
