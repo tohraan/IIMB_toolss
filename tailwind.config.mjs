@@ -76,6 +76,7 @@ export default withUt({
         "h3": "var(--font-size-h3)",
         "body": "var(--font-size-body)",
         "sm": "var(--font-size-sm)",
+        "xs": "var(--font-size-xs)", // New custom font size for timestamps
       },
       keyframes: {
         "accordion-down": {

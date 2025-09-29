@@ -41,8 +41,9 @@
   --font-size-h1: 3.375rem;
   --font-size-h2: 2.625rem;
   --font-size-h3: 2.25rem;
-  --font-size-body: 0.63rem;
-  --font-size-sm: 0.57rem;
+  --font-size-body: 1.05rem; /* User/AI messages */
+  --font-size-sm: 0.95rem;
+  --font-size-xs: 0.75rem;  /* Timestamps */
 }
 
 .dark {
@@ -82,8 +83,9 @@
   --font-size-h1: 3.375rem;
   --font-size-h2: 2.625rem;
   --font-size-h3: 2.25rem;
-  --font-size-body: 0.63rem;
-  --font-size-sm: 0.57rem;
+  --font-size-body: 1.05rem; /* User/AI messages */
+  --font-size-sm: 0.95rem;
+  --font-size-xs: 0.75rem;  /* Timestamps */
 }
 
 @theme inline {
@@ -162,6 +164,6 @@
 
   /* Reduce opacity of placeholder text */
   ::placeholder {
-    opacity: 0.3;
+    opacity: 0.45;
   }
 }

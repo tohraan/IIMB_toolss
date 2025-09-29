@@ -148,7 +148,7 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant={pathname === "/dashboard" ? "secondary" : "ghost"} className="w-full justify-start" asChild>
+              <Button variant={pathname === "/dashboard" ? "secondary" : "ghost"} className={`w-full ${isCollapsed ? "justify-center px-2" : "justify-start ml-6"}`} asChild>
                 <Link href="/dashboard">
                   <Home className="h-5 w-5" />
                   {!isCollapsed && <span className="ml-2 text-body">All Files</span>}
@@ -162,7 +162,7 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" className="w-full justify-start" asChild>
+              <Button variant="ghost" className={`w-full ${isCollapsed ? "justify-center px-2" : "justify-start ml-6"}`} asChild>
                 <Link href="/recent">
                   <Folder className="h-5 w-5" />
                   {!isCollapsed && <span className="ml-2 text-body">Recent</span>}
@@ -176,7 +176,7 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" className="w-full justify-start" asChild>
+              <Button variant="ghost" className={`w-full ${isCollapsed ? "justify-center px-2" : "justify-start ml-6"}`} asChild>
                 <Link href="/favorites">
                   <Folder className="h-5 w-5" />
                   {!isCollapsed && <span className="ml-2 text-body">Favorites</span>}
@@ -190,7 +190,7 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" className="w-full justify-start" asChild>
+              <Button variant="ghost" className={`w-full ${isCollapsed ? "justify-center px-2" : "justify-start ml-6"}`} asChild>
                 <Link href="/shared">
                   <Folder className="h-5 w-5" />
                   {!isCollapsed && <span className="ml-2 text-body">Shared</span>}
@@ -204,7 +204,7 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" className="w-full justify-start" asChild>
+              <Button variant="ghost" className={`w-full ${isCollapsed ? "justify-center px-2" : "justify-start ml-6"}`} asChild>
                 <Link href="/tags">
                   <Folder className="h-5 w-5" />
                   {!isCollapsed && <span className="ml-2 text-body">Tags</span>}
@@ -231,14 +231,14 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
                 >
                   <div className="flex items-center gap-2">
                     <CategoryIcon className="h-5 w-5" />
-                    {!isCollapsed && <span>{category.name}</span>}
+                    <span className="text-body">{category.name}</span>
                   </div>
                   {!isCollapsed && (
                     <ChevronDown className={`h-5 w-5 transition-transform ${isOpen ? "rotate-180" : "rotate-0"}`} />
                   )}
                 </Button>
               </CollapsibleTrigger>
-              <CollapsibleContent className={`${isCollapsed ? "ml-0 text-center" : "ml-6"} space-y-1`}>
+              <CollapsibleContent className={`${isCollapsed ? "ml-0 text-center" : ""} space-y-1`}>
                 {category.tools.map((tool) => {
                   const ToolIcon = tool.icon
                   return (
@@ -248,7 +248,7 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
                           <Button
                             variant={pathname === tool.href ? "secondary" : "ghost"}
                             size="sm"
-                            className={`w-full justify-start ${isCollapsed ? "px-2" : ""}`}
+                            className={`w-full justify-start ${isCollapsed ? "px-2" : "ml-6"}`}
                             asChild
                           >
                             <Link href={tool.href}>
