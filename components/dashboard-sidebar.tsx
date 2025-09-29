@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
-import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import {
   Cloud,
@@ -90,10 +89,12 @@ interface DashboardSidebarProps {
 export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
-  const supabase = createClient()
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
+    // Clear any local session
+    try {
+      localStorage.removeItem("user")
+    } catch {}
     router.push("/")
   }
 

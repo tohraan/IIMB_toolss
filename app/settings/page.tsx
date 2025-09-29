@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { createClient } from "@/lib/supabase/client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -12,22 +11,22 @@ import { useRouter } from "next/navigation"
 export default function SettingsPage() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(false)
-  const supabase = createClient()
   const router = useRouter()
 
   useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      setUser(user)
+    const stored = localStorage.getItem("user")
+    if (stored) {
+      try {
+        setUser(JSON.parse(stored))
+      } catch {}
     }
-    getUser()
-  }, [supabase])
+  }, [])
 
   const handleLogout = async () => {
     setLoading(true)
-    await supabase.auth.signOut()
+    try {
+      localStorage.removeItem("user")
+    } catch {}
     router.push("/")
   }
 
@@ -47,13 +46,13 @@ export default function SettingsPage() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" value={user?.email || ""} disabled />
+              <Input id="email" value={user?.email || "guest@example.com"} disabled />
             </div>
             <div className="space-y-2">
               <Label htmlFor="created">Account Created</Label>
               <Input
                 id="created"
-                value={user?.created_at ? new Date(user.created_at).toLocaleDateString() : ""}
+                value={user?.loginTime ? new Date(user.loginTime).toLocaleDateString() : ""}
                 disabled
               />
             </div>
