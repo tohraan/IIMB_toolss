@@ -93,10 +93,6 @@ const toolCategories = {
   },
 }
 
-interface DashboardSidebarProps {
-  currentCategory?: string
-}
-
 export function MobileSidebarDrawer() {
   const pathname = usePathname()
   const router = useRouter()
@@ -218,7 +214,7 @@ export function MobileSidebarDrawer() {
 
         {Object.entries(toolCategories).map(([key, category]) => {
           const CategoryIcon = category.icon
-          const isActive = currentCategory === key || pathname.includes(`/tools/${key}`)
+          const isActive = pathname.includes(`/tools/${key}`)
           const isOpen = openCategories[key]
 
           return (
