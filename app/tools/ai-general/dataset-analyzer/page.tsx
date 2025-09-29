@@ -102,7 +102,7 @@ export default function DatasetAnalyzerPage() {
       <div className="flex flex-1 flex-col gap-8 p-6 md:p-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Dataset Analyzer</h1>
+            <h1 className="text-h1 font-bold">Dataset Analyzer</h1>
             <p className="text-muted-foreground">Upload and analyze your datasets to discover insights and data quality metrics.</p>
           </div>
         </div>
@@ -116,22 +116,22 @@ export default function DatasetAnalyzerPage() {
                     <Upload className="h-5 w-5 text-primary" />
                     Upload Dataset
                   </CardTitle>
-                  <CardDescription>Upload a CSV, Excel, or JSON file for analysis (max 10MB).</CardDescription>
+                  <CardDescription className="text-body">Upload a CSV, Excel, or JSON file for analysis (max 10MB).</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid gap-4">
                     <div className="relative border-2 border-dashed border-border p-6 text-center transition-colors hover:border-primary/50">
                       <Upload className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-                      <p className="mb-1 text-sm text-muted-foreground">Drag and drop your file here, or</p>
-                      <label htmlFor="file-upload" className="cursor-pointer text-sm font-medium text-primary hover:underline">
+                      <p className="mb-1 text-body text-muted-foreground">Drag and drop your file here, or</p>
+                      <label htmlFor="file-upload" className="cursor-pointer text-body font-medium text-primary hover:underline">
                         browse to upload
                         <Input id="file-upload" type="file" accept=".csv,.xlsx,.json" onChange={handleFileUpload} className="sr-only" />
                       </label>
                     </div>
                     {file && (
-                      <div className="flex items-center justify-between border bg-secondary/50 p-3 text-sm">
-                        <span className="font-medium">{file.name}</span>
-                        <span className="text-muted-foreground">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                      <div className="flex items-center justify-between border bg-secondary/50 p-3 text-body">
+                        <span className="font-medium text-body">{file.name}</span>
+                        <span className="text-muted-foreground text-sm">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
                       </div>
                     )}
                   </div>
@@ -155,11 +155,11 @@ export default function DatasetAnalyzerPage() {
           )}
 
           {step === 2 && (
-            <Card className="flex h-[300px] items-center justify-center">
-              <CardContent className="text-center">
-                <div className="h-12 w-12 animate-spin border-b-2 border-primary mx-auto mb-4" />
-                <h3 className="text-xl font-semibold">Analyzing Dataset</h3>
-                <p className="text-muted-foreground">Processing your data and generating insights...</p>
+            <Card className="flex h-[350px] items-center justify-center">
+              <CardContent className="text-center space-y-4">
+                <div className="h-16 w-16 animate-spin border-4 border-primary border-t-transparent mx-auto" />
+                <h3 className="text-h3 font-semibold">Analyzing Dataset</h3>
+                <p className="text-muted-foreground text-body">Processing your data and generating insights...</p>
               </CardContent>
             </Card>
           )}
@@ -169,11 +169,11 @@ export default function DatasetAnalyzerPage() {
               <Tabs defaultValue="overview">
                 <ScrollArea orientation="horizontal" className="pb-2">
                   <TabsList className="grid w-full grid-cols-3 md:grid-cols-5">
-                    <TabsTrigger value="overview">Overview</TabsTrigger>
-                    <TabsTrigger value="columns">Column Analysis</TabsTrigger>
-                    <TabsTrigger value="quality">Data Quality</TabsTrigger>
-                    <TabsTrigger value="insights">Insights</TabsTrigger>
-                    <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
+                    <TabsTrigger value="overview" className="text-body">Overview</TabsTrigger>
+                    <TabsTrigger value="columns" className="text-body">Column Analysis</TabsTrigger>
+                    <TabsTrigger value="quality" className="text-body">Data Quality</TabsTrigger>
+                    <TabsTrigger value="insights" className="text-body">Insights</TabsTrigger>
+                    <TabsTrigger value="recommendations" className="text-body">Recommendations</TabsTrigger>
                   </TabsList>
                 </ScrollArea>
 
@@ -184,38 +184,38 @@ export default function DatasetAnalyzerPage() {
                         <Database className="h-5 w-5 text-primary" />
                         Dataset Overview
                       </CardTitle>
-                      <CardDescription>High-level summary of your dataset: {analysis.overview.fileName}</CardDescription>
+                      <CardDescription className="text-body">High-level summary of your dataset: {analysis.overview.fileName}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
                         <div className="border p-4 text-center">
                           <div className="text-2xl font-bold text-primary">{analysis.overview.rows.toLocaleString()}</div>
-                          <div className="text-sm text-muted-foreground">Rows</div>
+                          <div className="text-body text-muted-foreground">Rows</div>
                         </div>
                         <div className="border p-4 text-center">
                           <div className="text-2xl font-bold text-primary">{analysis.overview.columns}</div>
-                          <div className="text-sm text-muted-foreground">Columns</div>
+                          <div className="text-body text-muted-foreground">Columns</div>
                         </div>
                         <div className="border p-4 text-center">
                           <div className="text-2xl font-bold text-primary">{analysis.overview.fileSize}</div>
-                          <div className="text-sm text-muted-foreground">File Size</div>
+                          <div className="text-body text-muted-foreground">File Size</div>
                         </div>
                         <div className="border p-4 text-center">
                           <div className="text-2xl font-bold text-primary">{analysis.qualityScore}%</div>
-                          <div className="text-sm text-muted-foreground">Quality Score</div>
+                          <div className="text-body text-muted-foreground">Quality Score</div>
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <h3 className="text-sm font-medium">Data Types</h3>
+                        <h3 className="text-body font-medium">Data Types</h3>
                         <div className="flex flex-wrap gap-2">
                           <Badge variant="secondary" className="flex items-center gap-1">
-                            <span className="h-2 w-2 bg-blue-500" /> {analysis.overview.dataTypes.numeric} Numeric
+                            <span className="h-2 w-2 bg-blue-500" /> <span className="text-sm">{analysis.overview.dataTypes.numeric} Numeric</span>
                           </Badge>
                           <Badge variant="secondary" className="flex items-center gap-1">
-                            <span className="h-2 w-2 bg-green-500" /> {analysis.overview.dataTypes.categorical} Categorical
+                            <span className="h-2 w-2 bg-green-500" /> <span className="text-sm">{analysis.overview.dataTypes.categorical} Categorical</span>
                           </Badge>
                           <Badge variant="secondary" className="flex items-center gap-1">
-                            <span className="h-2 w-2 bg-purple-500" /> {analysis.overview.dataTypes.datetime} DateTime
+                            <span className="h-2 w-2 bg-purple-500" /> <span className="text-sm">{analysis.overview.dataTypes.datetime} DateTime</span>
                           </Badge>
                         </div>
                       </div>
@@ -226,53 +226,53 @@ export default function DatasetAnalyzerPage() {
                 <TabsContent value="columns" className="mt-6">
                   <Card>
                     <CardHeader>
-                      <CardTitle>Column Analysis</CardTitle>
-                      <CardDescription>Detailed breakdown of each column in your dataset.</CardDescription>
+                      <CardTitle className="text-h3">Column Analysis</CardTitle>
+                      <CardDescription className="text-body">Detailed breakdown of each column in your dataset.</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <ScrollArea className="h-[400px] w-full border">
+                      <ScrollArea className="h-[450px] w-full border">
                         <div className="relative w-full overflow-auto">
                           <Table>
                             <TableHeader className="sticky top-0 bg-card/80 backdrop-blur-sm">
                               <TableRow>
-                                <TableHead className="w-[150px]">Column Name</TableHead>
-                                <TableHead>Type</TableHead>
-                                <TableHead>Nulls</TableHead>
-                                <TableHead>Unique</TableHead>
-                                <TableHead>Min</TableHead>
-                                <TableHead>Max</TableHead>
-                                <TableHead>Mean</TableHead>
-                                <TableHead>Std Dev</TableHead>
-                                <TableHead>Top Value</TableHead>
-                                <TableHead>Frequency</TableHead>
+                                <TableHead className="w-[150px] text-sm">Column Name</TableHead>
+                                <TableHead className="text-sm">Type</TableHead>
+                                <TableHead className="text-sm">Nulls</TableHead>
+                                <TableHead className="text-sm">Unique</TableHead>
+                                <TableHead className="text-sm">Min</TableHead>
+                                <TableHead className="text-sm">Max</TableHead>
+                                <TableHead className="text-sm">Mean</TableHead>
+                                <TableHead className="text-sm">Std Dev</TableHead>
+                                <TableHead className="text-sm">Top Value</TableHead>
+                                <TableHead className="text-sm">Frequency</TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
                               {analysis.columns.map((column: any, index: number) => (
                                 <TableRow key={index}>
-                                  <TableCell className="font-medium">{column.name}</TableCell>
+                                  <TableCell className="font-medium text-body">{column.name}</TableCell>
                                   <TableCell>
                                     <Badge
                                       variant="outline"
                                       className={
                                         column.type === "numeric"
-                                          ? "border-blue-500 text-blue-400"
+                                          ? "border-blue-500 text-blue-400 text-sm"
                                           : column.type === "categorical"
-                                            ? "border-green-500 text-green-400"
-                                            : "border-purple-500 text-purple-400"
+                                            ? "border-green-500 text-green-400 text-sm"
+                                            : "border-purple-500 text-purple-400 text-sm"
                                       }
                                     >
                                       {column.type}
                                     </Badge>
                                   </TableCell>
-                                  <TableCell>{column.nulls}</TableCell>
-                                  <TableCell>{column.unique?.toLocaleString()}</TableCell>
-                                  <TableCell>{column.min ?? "-"}</TableCell>
-                                  <TableCell>{column.max ?? "-"}</TableCell>
-                                  <TableCell>{column.mean?.toFixed(2) ?? "-"}</TableCell>
-                                  <TableCell>{column.std?.toFixed(2) ?? "-"}</TableCell>
-                                  <TableCell>{column.top ?? "-"}</TableCell>
-                                  <TableCell>{column.freq?.toLocaleString() ?? "-"}</TableCell>
+                                  <TableCell className="text-body">{column.nulls}</TableCell>
+                                  <TableCell className="text-body">{column.unique?.toLocaleString()}</TableCell>
+                                  <TableCell className="text-body">{column.min ?? "-"}</TableCell>
+                                  <TableCell className="text-body">{column.max ?? "-"}</TableCell>
+                                  <TableCell className="text-body">{column.mean?.toFixed(2) ?? "-"}</TableCell>
+                                  <TableCell className="text-body">{column.std?.toFixed(2) ?? "-"}</TableCell>
+                                  <TableCell className="text-body">{column.top ?? "-"}</TableCell>
+                                  <TableCell className="text-body">{column.freq?.toLocaleString() ?? "-"}</TableCell>
                                 </TableRow>
                               ))}
                             </TableBody>
@@ -291,24 +291,24 @@ export default function DatasetAnalyzerPage() {
                           <Gauge className="h-5 w-5 text-primary" />
                           Data Quality Metrics
                         </CardTitle>
-                        <CardDescription>Key metrics indicating the overall quality of your dataset.</CardDescription>
+                        <CardDescription className="text-body">Key metrics indicating the overall quality of your dataset.</CardDescription>
                       </CardHeader>
                       <CardContent className="space-y-6">
                         <div>
-                          <div className="mb-1 flex justify-between text-sm">
+                          <div className="mb-1 flex justify-between text-body">
                             <span className="font-medium">Completeness</span>
                             <span className="text-muted-foreground">{analysis.statistics.completeness}%</span>
                           </div>
-                          <Progress value={analysis.statistics.completeness} className="h-2" />
+                          <Progress value={analysis.statistics.completeness} className="h-3" />
                         </div>
                         <div className="grid grid-cols-2 gap-4 text-center">
                           <div className="border p-4">
                             <div className="text-2xl font-bold text-destructive">{analysis.statistics.duplicates}</div>
-                            <div className="text-sm text-muted-foreground">Duplicates</div>
+                            <div className="text-body text-muted-foreground">Duplicates</div>
                           </div>
                           <div className="border p-4">
                             <div className="text-2xl font-bold text-orange-400">{analysis.statistics.outliers}</div>
-                            <div className="text-sm text-muted-foreground">Outliers</div>
+                            <div className="text-body text-muted-foreground">Outliers</div>
                           </div>
                         </div>
                       </CardContent>
@@ -320,20 +320,20 @@ export default function DatasetAnalyzerPage() {
                           <TrendingUp className="h-5 w-5 text-primary" />
                           Feature Correlations
                         </CardTitle>
-                        <CardDescription>Identify relationships between different variables.</CardDescription>
+                        <CardDescription className="text-body">Identify relationships between different variables.</CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-3">
                           {analysis.statistics.correlations.map((corr: any, index: number) => (
                             <div key={index} className="flex items-center justify-between border p-3">
-                              <div className="text-sm font-medium">
-                                {corr.var1} <span className="text-muted-foreground">×</span> {corr.var2}
+                              <div className="text-body font-medium">
+                                {corr.var1} <span className="text-muted-foreground text-body">×</span> {corr.var2}
                               </div>
                               <div className="flex items-center gap-2">
-                                <div className="text-sm text-muted-foreground">{(corr.correlation * 100).toFixed(0)}%</div>
-                                <div className="h-2 w-20 bg-muted">
+                                <div className="text-body text-muted-foreground">{(corr.correlation * 100).toFixed(0)}%</div>
+                                <div className="h-3 w-24 bg-muted">
                                   <div
-                                    className="h-2 bg-primary"
+                                    className="h-3 bg-primary"
                                     style={{ width: `${Math.abs(corr.correlation) * 100}%` }}
                                   />
                                 </div>
@@ -353,12 +353,12 @@ export default function DatasetAnalyzerPage() {
                         <Files className="h-5 w-5 text-primary" />
                         Key Insights
                       </CardTitle>
-                      <CardDescription>Important discoveries and patterns from your dataset.</CardDescription>
+                      <CardDescription className="text-body">Important discoveries and patterns from your dataset.</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <ul className="space-y-3">
                         {analysis.insights.map((insight: string, index: number) => (
-                          <li key={index} className="flex items-start gap-3 border p-3 text-sm text-muted-foreground">
+                          <li key={index} className="flex items-start gap-3 border p-3 text-body text-muted-foreground">
                             <div className="h-2 w-2 flex-shrink-0 bg-primary mt-2" />
                             {insight}
                           </li>
@@ -375,12 +375,12 @@ export default function DatasetAnalyzerPage() {
                         <TrendingUp className="h-5 w-5 text-primary" />
                         Recommendations
                       </CardTitle>
-                      <CardDescription>Actionable steps to improve data quality or leverage findings.</CardDescription>
+                      <CardDescription className="text-body">Actionable steps to improve data quality or leverage findings.</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <ul className="space-y-3">
                         {analysis.recommendations.map((rec: string, index: number) => (
-                          <li key={index} className="flex items-start gap-3 border p-3 text-sm text-muted-foreground">
+                          <li key={index} className="flex items-start gap-3 border p-3 text-body text-muted-foreground">
                             <div className="h-2 w-2 flex-shrink-0 bg-green-500 mt-2" />
                             {rec}
                           </li>

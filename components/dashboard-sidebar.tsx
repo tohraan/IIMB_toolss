@@ -150,12 +150,12 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
             <TooltipTrigger asChild>
               <Button variant={pathname === "/dashboard" ? "secondary" : "ghost"} className="w-full justify-start" asChild>
                 <Link href="/dashboard">
-                  <Home className="h-4 w-4" />
-                  {!isCollapsed && <span className="ml-2">All Files</span>}
+                  <Home className="h-5 w-5" />
+                  {!isCollapsed && <span className="ml-2 text-body">All Files</span>}
                 </Link>
               </Button>
             </TooltipTrigger>
-            {isCollapsed && <TooltipContent side="right">All Files</TooltipContent>}
+            {isCollapsed && <TooltipContent side="right" className="text-body">All Files</TooltipContent>}
           </Tooltip>
         </TooltipProvider>
 
@@ -164,12 +164,12 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
             <TooltipTrigger asChild>
               <Button variant="ghost" className="w-full justify-start" asChild>
                 <Link href="/recent">
-                  <Folder className="h-4 w-4" />
-                  {!isCollapsed && <span className="ml-2">Recent</span>}
+                  <Folder className="h-5 w-5" />
+                  {!isCollapsed && <span className="ml-2 text-body">Recent</span>}
                 </Link>
               </Button>
             </TooltipTrigger>
-            {isCollapsed && <TooltipContent side="right">Recent</TooltipContent>}
+            {isCollapsed && <TooltipContent side="right" className="text-body">Recent</TooltipContent>}
           </Tooltip>
         </TooltipProvider>
 
@@ -178,12 +178,12 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
             <TooltipTrigger asChild>
               <Button variant="ghost" className="w-full justify-start" asChild>
                 <Link href="/favorites">
-                  <Folder className="h-4 w-4" />
-                  {!isCollapsed && <span className="ml-2">Favorites</span>}
+                  <Folder className="h-5 w-5" />
+                  {!isCollapsed && <span className="ml-2 text-body">Favorites</span>}
                 </Link>
               </Button>
             </TooltipTrigger>
-            {isCollapsed && <TooltipContent side="right">Favorites</TooltipContent>}
+            {isCollapsed && <TooltipContent side="right" className="text-body">Favorites</TooltipContent>}
           </Tooltip>
         </TooltipProvider>
 
@@ -192,12 +192,12 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
             <TooltipTrigger asChild>
               <Button variant="ghost" className="w-full justify-start" asChild>
                 <Link href="/shared">
-                  <Folder className="h-4 w-4" />
-                  {!isCollapsed && <span className="ml-2">Shared</span>}
+                  <Folder className="h-5 w-5" />
+                  {!isCollapsed && <span className="ml-2 text-body">Shared</span>}
                 </Link>
               </Button>
             </TooltipTrigger>
-            {isCollapsed && <TooltipContent side="right">Shared</TooltipContent>}
+            {isCollapsed && <TooltipContent side="right" className="text-body">Shared</TooltipContent>}
           </Tooltip>
         </TooltipProvider>
 
@@ -206,12 +206,12 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
             <TooltipTrigger asChild>
               <Button variant="ghost" className="w-full justify-start" asChild>
                 <Link href="/tags">
-                  <Folder className="h-4 w-4" />
-                  {!isCollapsed && <span className="ml-2">Tags</span>}
+                  <Folder className="h-5 w-5" />
+                  {!isCollapsed && <span className="ml-2 text-body">Tags</span>}
                 </Link>
               </Button>
             </TooltipTrigger>
-            {isCollapsed && <TooltipContent side="right">Tags</TooltipContent>}
+            {isCollapsed && <TooltipContent side="right" className="text-body">Tags</TooltipContent>}
           </Tooltip>
         </TooltipProvider>
 
@@ -227,14 +227,14 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
               <CollapsibleTrigger asChild>
                 <Button
                   variant="ghost"
-                  className={`w-full justify-between font-medium ${isCollapsed ? "justify-center" : ""}`}
+                  className={`w-full justify-between font-medium text-body ${isCollapsed ? "justify-center" : ""}`}
                 >
                   <div className="flex items-center gap-2">
-                    <CategoryIcon className="h-4 w-4" />
+                    <CategoryIcon className="h-5 w-5" />
                     {!isCollapsed && <span>{category.name}</span>}
                   </div>
                   {!isCollapsed && (
-                    <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : "rotate-0"}`} />
+                    <ChevronDown className={`h-5 w-5 transition-transform ${isOpen ? "rotate-180" : "rotate-0"}`} />
                   )}
                 </Button>
               </CollapsibleTrigger>
@@ -248,16 +248,16 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
                           <Button
                             variant={pathname === tool.href ? "secondary" : "ghost"}
                             size="sm"
-                            className={`w-full justify-start ${isCollapsed ? "px-2" : "text-xs"}`}
+                            className={`w-full justify-start ${isCollapsed ? "px-2" : ""}`}
                             asChild
                           >
                             <Link href={tool.href}>
-                              <ToolIcon className={`${isCollapsed ? "" : "mr-2"} h-4 w-4`} />
-                              {!isCollapsed && <span>{tool.name}</span>}
+                              <ToolIcon className={`${isCollapsed ? "" : "mr-2"} h-5 w-5`} />
+                              {!isCollapsed && <span className="text-sm">{tool.name}</span>}
                             </Link>
                           </Button>
                         </TooltipTrigger>
-                        {isCollapsed && <TooltipContent side="right">{tool.name}</TooltipContent>}
+                        {isCollapsed && <TooltipContent side="right" className="text-sm">{tool.name}</TooltipContent>}
                       </Tooltip>
                     </TooltipProvider>
                   )
@@ -272,14 +272,14 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
 
   return (
     <> {/* Use a React Fragment to return multiple elements */}
-      <div className={`hidden md:flex h-full ${isCollapsed ? "w-16" : "w-64"} flex-col bg-sidebar border-r border-sidebar-border transition-all duration-200`}>
+      <div className={`hidden md:flex h-full ${isCollapsed ? "w-16" : "w-72"} flex-col bg-sidebar border-r border-sidebar-border transition-all duration-200`}>
         <div className="flex h-14 items-center justify-between border-b border-sidebar-border px-2">
           <Link href="/dashboard" className="flex items-center gap-2 font-semibold px-2">
             <Bot className="h-6 w-6 text-sidebar-primary" />
-            {!isCollapsed && <span>AI Tools Platform</span>}
+            {!isCollapsed && <span className="text-body">AI Tools Platform</span>}
           </Link>
           <Button variant="ghost" size="icon" aria-label="Toggle sidebar" onClick={() => setIsCollapsed((v) => !v)}>
-            {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+            {isCollapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
           </Button>
         </div>
         {SidebarContent}
@@ -290,12 +290,12 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
                 <TooltipTrigger asChild>
                   <Button variant="ghost" className="w-full justify-start" asChild>
                     <Link href="/settings">
-                      <Settings className="h-4 w-4" />
-                      {!isCollapsed && <span className="ml-2">Settings</span>}
+                      <Settings className="h-5 w-5" />
+                      {!isCollapsed && <span className="ml-2 text-body">Settings</span>}
                     </Link>
                   </Button>
                 </TooltipTrigger>
-                {isCollapsed && <TooltipContent side="right">Settings</TooltipContent>}
+                {isCollapsed && <TooltipContent side="right" className="text-body">Settings</TooltipContent>}
               </Tooltip>
             </TooltipProvider>
 
@@ -304,23 +304,23 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
                 <TooltipTrigger asChild>
                   <Button variant="ghost" className="w-full justify-start" asChild>
                     <Link href="/deleted-files">
-                      <Trash className="h-4 w-4" />
-                      {!isCollapsed && <span className="ml-2">Deleted Files</span>}
+                      <Trash className="h-5 w-5" />
+                      {!isCollapsed && <span className="ml-2 text-body">Deleted Files</span>}
                     </Link>
                   </Button>
                 </TooltipTrigger>
-                {isCollapsed && <TooltipContent side="right">Deleted Files</TooltipContent>}
+                {isCollapsed && <TooltipContent side="right" className="text-body">Deleted Files</TooltipContent>}
               </Tooltip>
             </TooltipProvider>
 
             <div className="mt-4 space-y-2">
               {!isCollapsed && (
                 <div className="px-2">
-                  <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
+                  <div className="flex items-center justify-between text-body text-muted-foreground mb-2">
                     <span>Storage</span>
                     <span className="font-medium">42 GB / 256 GB</span>
                   </div>
-                  <Progress value={42 / 256 * 100} className="h-2" />
+                  <Progress value={42 / 256 * 100} className="h-3" />
                 </div>
               )}
               {isCollapsed && (
@@ -328,10 +328,10 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button variant="ghost" className="w-full justify-center">
-                        <HardDrive className="h-4 w-4" />
+                        <HardDrive className="h-5 w-5" />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent side="right">Storage: 42 GB / 256 GB</TooltipContent>
+                    <TooltipContent side="right" className="text-body">Storage: 42 GB / 256 GB</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
               )}
@@ -341,11 +341,11 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button variant="ghost" className="w-full justify-start" onClick={handleLogout}>
-                    <LogOut className="h-4 w-4" />
-                    {!isCollapsed && <span className="ml-2">Sign Out</span>}
+                    <LogOut className="h-5 w-5" />
+                    {!isCollapsed && <span className="ml-2 text-body">Sign Out</span>}
                   </Button>
                 </TooltipTrigger>
-                {isCollapsed && <TooltipContent side="right">Sign Out</TooltipContent>}
+                {isCollapsed && <TooltipContent side="right" className="text-body">Sign Out</TooltipContent>}
               </Tooltip>
             </TooltipProvider>
           </div>
@@ -356,16 +356,16 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="ghost" size="icon" className="md:hidden absolute top-4 left-4 z-50">
-            <LayoutGrid className="h-6 w-6" />
+            <LayoutGrid className="h-7 w-7" />
             <span className="sr-only">Toggle sidebar</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="p-0 w-64">
+        <SheetContent side="left" className="p-0 w-72">
           <div className="flex h-full w-full flex-col bg-sidebar border-r border-sidebar-border">
             <div className="flex h-14 items-center border-b border-sidebar-border px-4">
               <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
                 <Bot className="h-6 w-6 text-sidebar-primary" />
-                AI Tools Platform
+                <span className="text-body">AI Tools Platform</span>
               </Link>
             </div>
             {SidebarContent}
@@ -373,26 +373,26 @@ export function DashboardSidebar({ currentCategory }: DashboardSidebarProps) {
               <div className="space-y-2">
                 <Button variant="ghost" className="w-full justify-start" asChild>
                   <Link href="/settings">
-                    <Settings className="mr-2 h-4 w-4" />
-                    Settings
+                    <Settings className="mr-2 h-5 w-5" />
+                    <span className="text-body">Settings</span>
                   </Link>
                 </Button>
                 <Button variant="ghost" className="w-full justify-start" asChild>
                   <Link href="/deleted-files">
-                    <Trash className="mr-2 h-4 w-4" />
-                    Deleted Files
+                    <Trash className="mr-2 h-5 w-5" />
+                    <span className="text-body">Deleted Files</span>
                   </Link>
                 </Button>
                 <div className="mt-4 space-y-2 px-2">
-                  <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
+                  <div className="flex items-center justify-between text-body text-muted-foreground mb-2">
                     <span>Storage</span>
                     <span className="font-medium">42 GB / 256 GB</span>
                   </div>
-                  <Progress value={42 / 256 * 100} className="h-2" />
+                  <Progress value={42 / 256 * 100} className="h-3" />
                 </div>
                 <Button variant="ghost" className="w-full justify-start" onClick={handleLogout}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Sign Out
+                  <LogOut className="mr-2 h-5 w-5" />
+                  <span className="text-body">Sign Out</span>
                 </Button>
               </div>
             </div>

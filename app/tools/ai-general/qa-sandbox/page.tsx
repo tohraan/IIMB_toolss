@@ -54,8 +54,8 @@ export default function AiQaSandboxPage() {
       <div className="flex flex-1 flex-col gap-8 p-6 md:p-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">AI Q&A Sandbox</h1>
-            <p className="text-muted-foreground">Ask questions and get AI-powered answers, optionally with provided context.</p>
+            <h1 className="text-h1 font-bold">AI Q&A Sandbox</h1>
+            <p className="text-muted-foreground text-body">Ask questions and get AI-powered answers, optionally with provided context.</p>
           </div>
         </div>
 
@@ -68,11 +68,11 @@ export default function AiQaSandboxPage() {
                     <MessageCircle className="h-5 w-5 text-primary" />
                     Your Question
                   </CardTitle>
-                  <CardDescription>Enter your question for the AI to answer.</CardDescription>
+                  <CardDescription className="text-body">Enter your question for the AI to answer.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="question">Question</Label>
+                    <Label htmlFor="question" className="text-body">Question</Label>
                     <Input
                       id="question"
                       placeholder="e.g., What is the capital of France?"
@@ -81,13 +81,13 @@ export default function AiQaSandboxPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="context">Optional: Provide Context</Label>
+                    <Label htmlFor="context" className="text-body">Optional: Provide Context</Label>
                     <Textarea
                       id="context"
                       placeholder="Paste relevant text or documents here for a more informed answer."
                       value={context}
                       onChange={(e) => setContext(e.target.value)}
-                      className="min-h-[120px]"
+                      className="min-h-[150px]"
                     />
                   </div>
                 </CardContent>
@@ -110,11 +110,11 @@ export default function AiQaSandboxPage() {
           )}
 
           {step === 2 && (
-            <Card className="flex h-[300px] items-center justify-center">
-              <CardContent className="text-center">
-                <div className="h-12 w-12 animate-spin border-b-2 border-primary mx-auto mb-4" />
-                <h3 className="text-xl font-semibold">Formulating Answer</h3>
-                <p className="text-muted-foreground">AI is processing your question and generating a response...</p>
+            <Card className="flex h-[350px] items-center justify-center">
+              <CardContent className="text-center space-y-4">
+                <div className="h-16 w-16 animate-spin border-4 border-primary border-t-transparent mx-auto" />
+                <h3 className="text-h3 font-semibold">Formulating Answer</h3>
+                <p className="text-muted-foreground text-body">AI is processing your question and generating a response...</p>
               </CardContent>
             </Card>
           )}
@@ -127,20 +127,20 @@ export default function AiQaSandboxPage() {
                     <Lightbulb className="h-5 w-5 text-primary" />
                     Answer
                   </CardTitle>
-                  <CardDescription>AI-generated answer to your question.</CardDescription>
+                  <CardDescription className="text-body">AI-generated answer to your question.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <h3 className="text-sm font-medium">Question:</h3>
-                    <p className="text-muted-foreground/80">{answer.question}</p>
+                    <h3 className="text-body font-medium">Question:</h3>
+                    <p className="text-muted-foreground/80 text-body">{answer.question}</p>
                   </div>
                   <div className="space-y-2">
-                    <h3 className="text-sm font-medium">Answer:</h3>
-                    <div className="border bg-muted/20 p-4 text-muted-foreground leading-relaxed">
+                    <h3 className="text-body font-medium">Answer:</h3>
+                    <div className="border bg-muted/20 p-4 text-muted-foreground text-body leading-relaxed">
                       {answer.answer}
                     </div>
                   </div>
-                  <div className="flex items-center justify-between text-sm text-muted-foreground">
+                  <div className="flex items-center justify-between text-body text-muted-foreground">
                     <span>Source: <span className="font-medium text-primary">{answer.source}</span></span>
                     <span>Confidence: <span className="font-medium text-primary">{(answer.confidence * 100).toFixed(1)}%</span></span>
                   </div>
@@ -150,14 +150,14 @@ export default function AiQaSandboxPage() {
               {answer.relatedQuestions?.length > 0 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Related Questions</CardTitle>
-                    <CardDescription>Other questions you might be interested in.</CardDescription>
+                    <CardTitle className="text-h3">Related Questions</CardTitle>
+                    <CardDescription className="text-body">Other questions you might be interested in.</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2">
                       {answer.relatedQuestions.map((relatedQ: string, index: number) => (
-                        <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
-                          <Lightbulb className="h-4 w-4 flex-shrink-0 text-primary mt-0.5" />
+                        <li key={index} className="flex items-start gap-2 text-body text-muted-foreground">
+                          <Lightbulb className="h-5 w-5 flex-shrink-0 text-primary mt-0.5" />
                           {relatedQ}
                         </li>
                       ))}

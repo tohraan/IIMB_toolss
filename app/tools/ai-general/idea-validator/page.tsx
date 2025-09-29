@@ -76,8 +76,8 @@ export default function BusinessIdeaValidatorPage() {
       <div className="flex flex-1 flex-col gap-8 p-6 md:p-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Business Idea Validator</h1>
-            <p className="text-muted-foreground">Analyze and validate your business ideas with AI-driven insights.</p>
+            <h1 className="text-h1 font-bold">Business Idea Validator</h1>
+            <p className="text-muted-foreground text-body">Analyze and validate your business ideas with AI-driven insights.</p>
           </div>
         </div>
 
@@ -90,21 +90,21 @@ export default function BusinessIdeaValidatorPage() {
                     <Lightbulb className="h-5 w-5 text-primary" />
                     Your Business Idea
                   </CardTitle>
-                  <CardDescription>Provide details about your business concept for validation.</CardDescription>
+                  <CardDescription className="text-body">Provide details about your business concept for validation.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="business-idea">Business Idea</Label>
+                    <Label htmlFor="business-idea" className="text-body">Business Idea</Label>
                     <Textarea
                       id="business-idea"
                       placeholder="e.g., A subscription box service for sustainable pet products."
                       value={businessIdea}
                       onChange={(e) => setBusinessIdea(e.target.value)}
-                      className="min-h-[120px]"
+                      className="min-h-[150px]"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="target-audience">Target Audience</Label>
+                    <Label htmlFor="target-audience" className="text-body">Target Audience</Label>
                     <Input
                       id="target-audience"
                       placeholder="e.g., Environmentally-conscious pet owners in urban areas."
@@ -113,7 +113,7 @@ export default function BusinessIdeaValidatorPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="market-size">Estimated Market Size</Label>
+                    <Label htmlFor="market-size" className="text-body">Estimated Market Size</Label>
                     <Input
                       id="market-size"
                       placeholder="e.g., $50 Billion (global annual spend)"
@@ -141,11 +141,11 @@ export default function BusinessIdeaValidatorPage() {
           )}
 
           {step === 2 && (
-            <Card className="flex h-[300px] items-center justify-center">
-              <CardContent className="text-center">
-                <div className="h-12 w-12 animate-spin border-b-2 border-primary mx-auto mb-4" />
-                <h3 className="text-xl font-semibold">Validating Business Idea</h3>
-                <p className="text-muted-foreground">AI is analyzing your idea for viability and potential...</p>
+            <Card className="flex h-[350px] items-center justify-center">
+              <CardContent className="text-center space-y-4">
+                <div className="h-16 w-16 animate-spin border-4 border-primary border-t-transparent mx-auto" />
+                <h3 className="text-h3 font-semibold">Validating Business Idea</h3>
+                <p className="text-muted-foreground text-body">AI is analyzing your idea for viability and potential...</p>
               </CardContent>
             </Card>
           )}
@@ -158,18 +158,18 @@ export default function BusinessIdeaValidatorPage() {
                     <CheckCircle2 className="h-5 w-5 text-primary" />
                     Idea Viability Assessment
                   </CardTitle>
-                  <CardDescription>Overall assessment of your business idea's potential.</CardDescription>
+                  <CardDescription className="text-body">Overall assessment of your business idea's potential.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="text-center">
-                    <div className={`text-5xl font-bold mb-2 ${validationResults.viability.score > 70 ? "text-green-500" : validationResults.viability.score > 40 ? "text-yellow-500" : "text-destructive"}`}>
+                    <div className={`text-h1 font-bold mb-2 ${validationResults.viability.score > 70 ? "text-green-500" : validationResults.viability.score > 40 ? "text-yellow-500" : "text-destructive"}`}>
                       {validationResults.viability.status}
                     </div>
-                    <div className="text-muted-foreground">
+                    <div className="text-muted-foreground text-body">
                       Viability Score: {validationResults.viability.score}%
                     </div>
                   </div>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
+                  <p className="text-muted-foreground text-body leading-relaxed">
                     {validationResults.viability.summary}
                   </p>
                 </CardContent>
@@ -178,14 +178,14 @@ export default function BusinessIdeaValidatorPage() {
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Strengths</CardTitle>
-                    <CardDescription>Key advantages and positive aspects of your idea.</CardDescription>
+                    <CardTitle className="text-h3">Strengths</CardTitle>
+                    <CardDescription className="text-body">Key advantages and positive aspects of your idea.</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-3">
                       {validationResults.strengths.map((strength: string, index: number) => (
-                        <li key={index} className="flex items-start gap-3 border p-3 text-sm text-muted-foreground">
-                          <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-green-500 mt-0.5" />
+                        <li key={index} className="flex items-start gap-3 border p-3 text-body text-muted-foreground">
+                          <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-green-500 mt-0.5" />
                           {strength}
                         </li>
                       ))}
@@ -195,14 +195,14 @@ export default function BusinessIdeaValidatorPage() {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle>Weaknesses</CardTitle>
-                    <CardDescription>Potential drawbacks and areas for improvement.</CardDescription>
+                    <CardTitle className="text-h3">Weaknesses</CardTitle>
+                    <CardDescription className="text-body">Potential drawbacks and areas for improvement.</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-3">
                       {validationResults.weaknesses.map((weakness: string, index: number) => (
-                        <li key={index} className="flex items-start gap-3 border p-3 text-sm text-muted-foreground">
-                          <XCircle className="h-4 w-4 flex-shrink-0 text-destructive mt-0.5" />
+                        <li key={index} className="flex items-start gap-3 border p-3 text-body text-muted-foreground">
+                          <XCircle className="h-5 w-5 flex-shrink-0 text-destructive mt-0.5" />
                           {weakness}
                         </li>
                       ))}
@@ -214,14 +214,14 @@ export default function BusinessIdeaValidatorPage() {
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Opportunities</CardTitle>
-                    <CardDescription>Favorable external factors that could benefit your idea.</CardDescription>
+                    <CardTitle className="text-h3">Opportunities</CardTitle>
+                    <CardDescription className="text-body">Favorable external factors that could benefit your idea.</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-3">
                       {validationResults.opportunities.map((opportunity: string, index: number) => (
-                        <li key={index} className="flex items-start gap-3 border p-3 text-sm text-muted-foreground">
-                          <Lightbulb className="h-4 w-4 flex-shrink-0 text-primary mt-0.5" />
+                        <li key={index} className="flex items-start gap-3 border p-3 text-body text-muted-foreground">
+                          <Lightbulb className="h-5 w-5 flex-shrink-0 text-primary mt-0.5" />
                           {opportunity}
                         </li>
                       ))}
@@ -231,14 +231,14 @@ export default function BusinessIdeaValidatorPage() {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle>Threats</CardTitle>
-                    <CardDescription>Unfavorable external factors that could challenge your idea.</CardDescription>
+                    <CardTitle className="text-h3">Threats</CardTitle>
+                    <CardDescription className="text-body">Unfavorable external factors that could challenge your idea.</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-3">
                       {validationResults.threats.map((threat: string, index: number) => (
-                        <li key={index} className="flex items-start gap-3 border p-3 text-sm text-muted-foreground">
-                          <XCircle className="h-4 w-4 flex-shrink-0 text-destructive mt-0.5" />
+                        <li key={index} className="flex items-start gap-3 border p-3 text-body text-muted-foreground">
+                          <XCircle className="h-5 w-5 flex-shrink-0 text-destructive mt-0.5" />
                           {threat}
                         </li>
                       ))}
@@ -249,14 +249,14 @@ export default function BusinessIdeaValidatorPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Recommendations</CardTitle>
-                  <CardDescription>Actionable steps to enhance your business idea.</CardDescription>
+                  <CardTitle className="text-h3">Recommendations</CardTitle>
+                  <CardDescription className="text-body">Actionable steps to enhance your business idea.</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3">
                     {validationResults.recommendations.map((recommendation: string, index: number) => (
-                      <li key={index} className="flex items-start gap-3 border p-3 text-sm text-muted-foreground">
-                        <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-green-500 mt-0.5" />
+                      <li key={index} className="flex items-start gap-3 border p-3 text-body text-muted-foreground">
+                        <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-green-500 mt-0.5" />
                         {recommendation}
                       </li>
                     ))}

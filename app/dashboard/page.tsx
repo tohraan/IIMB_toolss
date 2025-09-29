@@ -83,8 +83,8 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-balance">Welcome to your AI Toolkit</h1>
-        <p className="text-muted-foreground text-pretty">
+        <h1 className="text-h1 font-bold text-balance">Welcome to your AI Toolkit</h1>
+        <p className="text-muted-foreground text-pretty text-body">
           Choose from 20 specialized tools across 4 categories to supercharge your productivity.
         </p>
       </div>
@@ -92,17 +92,17 @@ export default function DashboardPage() {
       {toolCategories.map((category) => (
         <section key={category.name} className="space-y-4">
           <div className="flex items-center gap-3">
-            <category.icon className="h-6 w-6 text-primary" />
-            <h2 className="text-2xl font-bold">{category.name}</h2>
+            <category.icon className="h-7 w-7 text-primary" />
+            <h2 className="text-h2 font-bold">{category.name}</h2>
           </div>
-          <p className="text-muted-foreground">{category.description}</p>
+          <p className="text-muted-foreground text-body">{category.description}</p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {category.tools.map((tool) => (
               <Card key={tool.href}>
                 <Link href={tool.href}>
                   <CardHeader className="flex-row items-center gap-4 py-4">
-                    <tool.icon className="h-6 w-6 text-primary" />
-                    <CardTitle className="text-lg font-semibold">{tool.name}</CardTitle>
+                    <tool.icon className="h-7 w-7 text-primary" />
+                    <CardTitle className="text-h3 font-semibold">{tool.name}</CardTitle>
                   </CardHeader>
                   {/* Optional: Add a CardContent with a description if tools have them */}
                   {/* <CardContent>

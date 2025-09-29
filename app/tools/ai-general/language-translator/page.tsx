@@ -100,8 +100,8 @@ export default function LanguageTranslatorPage() {
       <div className="flex flex-1 flex-col gap-8 p-6 md:p-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Language Translator</h1>
-            <p className="text-muted-foreground">Translate text between multiple languages with AI-powered accuracy.</p>
+            <h1 className="text-h1 font-bold">Language Translator</h1>
+            <p className="text-muted-foreground text-body">Translate text between multiple languages with AI-powered accuracy.</p>
           </div>
         </div>
 
@@ -119,9 +119,9 @@ export default function LanguageTranslatorPage() {
                 <CardContent>
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:items-center">
                     <div className="space-y-2">
-                      <label className="block text-sm font-medium">From</label>
+                      <label className="block text-body font-medium">From</label>
                       <Select value={sourceLang} onValueChange={setSourceLang}>
-                        <SelectTrigger>
+                        <SelectTrigger className="text-body">
                           <SelectValue placeholder="Auto-detect" />
                         </SelectTrigger>
                         <SelectContent>
@@ -138,16 +138,16 @@ export default function LanguageTranslatorPage() {
                         variant="outline"
                         size="icon"
                         onClick={swapLanguages}
-                        className="h-9 w-9"
+                        className="h-10 w-10"
                         disabled={sourceLang === "auto"}
                       >
-                        <ArrowRightLeft className="h-4 w-4" />
+                        <ArrowRightLeft className="h-5 w-5" />
                       </Button>
                     </div>
                     <div className="space-y-2">
-                      <label className="block text-sm font-medium">To</label>
+                      <label className="block text-body font-medium">To</label>
                       <Select value={targetLang} onValueChange={setTargetLang}>
-                        <SelectTrigger>
+                        <SelectTrigger className="text-body">
                           <SelectValue placeholder="Select target language" />
                         </SelectTrigger>
                         <SelectContent>
@@ -178,7 +178,7 @@ export default function LanguageTranslatorPage() {
                     placeholder="Enter text to translate..."
                     value={sourceText}
                     onChange={(e) => setSourceText(e.target.value)}
-                    className="min-h-[150px]"
+                    className="min-h-[180px]"
                   />
                   <div className="mt-2 text-sm text-muted-foreground">{sourceText.length} characters</div>
                 </CardContent>
@@ -201,11 +201,11 @@ export default function LanguageTranslatorPage() {
           )}
 
           {step === 2 && (
-            <Card className="flex h-[300px] items-center justify-center">
-              <CardContent className="text-center">
-                <div className="h-12 w-12 animate-spin border-b-2 border-primary mx-auto mb-4" />
-                <h3 className="text-xl font-semibold">Translating Text</h3>
-                <p className="text-muted-foreground">AI is translating your text into the target language...</p>
+            <Card className="flex h-[350px] items-center justify-center">
+              <CardContent className="text-center space-y-4">
+                <div className="h-16 w-16 animate-spin border-4 border-primary border-t-transparent mx-auto" />
+                <h3 className="text-h3 font-semibold">Translating Text</h3>
+                <p className="text-muted-foreground text-body">AI is translating your text into the target language...</p>
               </CardContent>
             </Card>
           )}
@@ -235,23 +235,23 @@ export default function LanguageTranslatorPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex flex-wrap items-center gap-2 mb-4">
-                    <Badge variant="secondary">
+                    <Badge variant="secondary" className="text-sm">
                       {translation.detectedLanguage} <ArrowRightLeft className="mx-1 h-3 w-3" /> {translation.targetLanguage}
                     </Badge>
-                    <Badge variant="secondary">
+                    <Badge variant="secondary" className="text-sm">
                       {(translation.confidence * 100).toFixed(1)}% confidence
                     </Badge>
                   </div>
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div className="space-y-2">
-                      <h4 className="text-sm font-medium">Original Text</h4>
-                      <div className="rounded-md border bg-muted/20 p-4 text-muted-foreground break-words">
+                      <h4 className="text-body font-medium">Original Text</h4>
+                      <div className="border bg-muted/20 p-4 text-muted-foreground text-body break-words">
                         {translation.originalText}
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <h4 className="text-sm font-medium">Translated Text</h4>
-                      <div className="rounded-md border bg-muted/20 p-4 text-muted-foreground break-words">
+                      <h4 className="text-body font-medium">Translated Text</h4>
+                      <div className="border bg-muted/20 p-4 text-muted-foreground text-body break-words">
                         {translation.translatedText}
                       </div>
                     </div>
@@ -262,14 +262,14 @@ export default function LanguageTranslatorPage() {
               {translation.alternatives?.length > 0 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Alternative Translations</CardTitle>
+                    <CardTitle className="text-h3">Alternative Translations</CardTitle>
                     <CardDescription>Other possible translations for your text.</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
                       {translation.alternatives.map((alt: string, index: number) => (
-                        <div key={index} className="flex items-center justify-between rounded-md border p-3">
-                          <span className="text-muted-foreground break-words mr-4">{alt}</span>
+                        <div key={index} className="flex items-center justify-between border p-3">
+                          <span className="text-muted-foreground text-body break-words mr-4">{alt}</span>
                           <Button
                             variant="ghost"
                             size="sm"
@@ -288,11 +288,11 @@ export default function LanguageTranslatorPage() {
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Pronunciation Guide</CardTitle>
+                    <CardTitle className="text-h3">Pronunciation Guide</CardTitle>
                     <CardDescription>Phonetic guide for the translated text.</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="rounded-md border bg-muted/20 p-3">
+                    <div className="border bg-muted/20 p-3">
                       <p className="text-sm font-mono text-muted-foreground break-words">{translation.pronunciation}</p>
                     </div>
                   </CardContent>
@@ -300,21 +300,21 @@ export default function LanguageTranslatorPage() {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle>Language Information</CardTitle>
+                    <CardTitle className="text-h3">Language Information</CardTitle>
                     <CardDescription>Details about the target language.</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-2">
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Family:</span>
-                      <span className="font-medium">{translation.languageInfo.family}</span>
+                      <span className="text-muted-foreground text-body">Family:</span>
+                      <span className="font-medium text-body">{translation.languageInfo.family}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Speakers:</span>
-                      <span className="font-medium">{translation.languageInfo.speakers}</span>
+                      <span className="text-muted-foreground text-body">Speakers:</span>
+                      <span className="font-medium text-body">{translation.languageInfo.speakers}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Word Count:</span>
-                      <span className="font-medium">
+                      <span className="text-muted-foreground text-body">Word Count:</span>
+                      <span className="font-medium text-body">
                         {translation.wordCount.original} &rarr; {translation.wordCount.translated}
                       </span>
                     </div>
@@ -325,13 +325,13 @@ export default function LanguageTranslatorPage() {
               {translation.languageInfo.regions?.length > 0 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Primary Regions</CardTitle>
+                    <CardTitle className="text-h3">Primary Regions</CardTitle>
                     <CardDescription>Regions where the target language is predominantly spoken.</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-wrap gap-2">
                       {translation.languageInfo.regions.map((region: string, index: number) => (
-                        <Badge key={index} variant="secondary">
+                        <Badge key={index} variant="secondary" className="text-sm">
                           {region}
                         </Badge>
                       ))}

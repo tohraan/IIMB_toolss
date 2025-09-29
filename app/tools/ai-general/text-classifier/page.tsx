@@ -146,8 +146,8 @@ export default function TextClassifierPage() {
       <div className="flex flex-1 flex-col gap-8 p-6 md:p-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Text Classifier</h1>
-            <p className="text-muted-foreground">Classify text for sentiment, topics, intent, and more using AI analysis.</p>
+            <h1 className="text-h1 font-bold">Text Classifier</h1>
+            <p className="text-muted-foreground text-body">Classify text for sentiment, topics, intent, and more using AI analysis.</p>
           </div>
         </div>
 
@@ -160,14 +160,14 @@ export default function TextClassifierPage() {
                     <FileText className="h-5 w-5 text-primary" />
                     Text to Classify
                   </CardTitle>
-                  <CardDescription>Enter the text you want to analyze and classify below.</CardDescription>
+                  <CardDescription className="text-body">Enter the text you want to analyze and classify below.</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Textarea
                     placeholder="Enter your text here for classification..."
                     value={text}
                     onChange={(e) => setText(e.target.value)}
-                    className="min-h-[200px]"
+                    className="min-h-[220px]"
                   />
                   <div className="mt-2 text-sm text-muted-foreground">{text.length} characters</div>
                 </CardContent>
@@ -179,7 +179,7 @@ export default function TextClassifierPage() {
                     <Zap className="h-5 w-5 text-primary" />
                     Classification Mode
                   </CardTitle>
-                  <CardDescription>Choose what type of classification to perform.</CardDescription>
+                  <CardDescription className="text-body">Choose what type of classification to perform.</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -195,8 +195,8 @@ export default function TextClassifierPage() {
                         onClick={() => setClassificationMode(mode.id)}
                         className="h-auto flex-col p-3"
                       >
-                        <div className="font-medium">{mode.label}</div>
-                        <div className="text-xs opacity-70">{mode.desc}</div>
+                        <div className="font-medium text-body">{mode.label}</div>
+                        <div className="text-sm opacity-70">{mode.desc}</div>
                       </Button>
                     ))}
                   </div>
@@ -220,11 +220,11 @@ export default function TextClassifierPage() {
           )}
 
           {step === 2 && (
-            <Card className="flex h-[300px] items-center justify-center">
-              <CardContent className="text-center">
-                <div className="h-12 w-12 animate-spin border-b-2 border-primary mx-auto mb-4" />
-                <h3 className="text-xl font-semibold">Classifying Text</h3>
-                <p className="text-muted-foreground">AI is analyzing your text for classification...</p>
+            <Card className="flex h-[350px] items-center justify-center">
+              <CardContent className="text-center space-y-4">
+                <div className="h-16 w-16 animate-spin border-4 border-primary border-t-transparent mx-auto" />
+                <h3 className="text-h3 font-semibold">Classifying Text</h3>
+                <p className="text-muted-foreground text-body">AI is analyzing your text for classification...</p>
               </CardContent>
             </Card>
           )}
@@ -233,16 +233,16 @@ export default function TextClassifierPage() {
             <div className="space-y-6">
               <Tabs defaultValue={classificationMode}>
                 <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
-                  <TabsTrigger value="sentiment" onClick={() => setClassificationMode("sentiment")}>
+                  <TabsTrigger value="sentiment" onClick={() => setClassificationMode("sentiment")} className="text-body">
                     Sentiment
                   </TabsTrigger>
-                  <TabsTrigger value="topic" onClick={() => setClassificationMode("topic")}>
+                  <TabsTrigger value="topic" onClick={() => setClassificationMode("topic")} className="text-body">
                     Topic
                   </TabsTrigger>
-                  <TabsTrigger value="intent" onClick={() => setClassificationMode("intent")}>
+                  <TabsTrigger value="intent" onClick={() => setClassificationMode("intent")} className="text-body">
                     Intent
                   </TabsTrigger>
-                  <TabsTrigger value="language" onClick={() => setClassificationMode("language")}>
+                  <TabsTrigger value="language" onClick={() => setClassificationMode("language")} className="text-body">
                     Language
                   </TabsTrigger>
                 </TabsList>
@@ -255,30 +255,30 @@ export default function TextClassifierPage() {
                           <BarChart3 className="h-5 w-5 text-primary" />
                           Sentiment Analysis
                         </CardTitle>
-                        <CardDescription>Overall emotional tone and breakdown.</CardDescription>
+                        <CardDescription className="text-body">Overall emotional tone and breakdown.</CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="mb-6 text-center">
                           <div className={`mb-2 text-5xl font-bold ${getSentimentColorClass(results.sentiment.primary)}`}>
                             {results.sentiment.primary}
                           </div>
-                          <div className="text-muted-foreground">
+                          <div className="text-muted-foreground text-body">
                             Confidence: {(results.sentiment.confidence * 100).toFixed(1)}%
                           </div>
                         </div>
                         <div className="grid gap-4">
                           {results.sentiment.scores.map((score: any, index: number) => (
-                            <div key={index} className="flex items-center justify-between rounded-md border p-3">
+                            <div key={index} className="flex items-center justify-between border p-3">
                               <div className="flex items-center gap-3">
-                                <Badge variant="secondary" className={`flex items-center gap-1 ${getSentimentColorClass(score.label)}`}>
-                                  {getSentimentIcon(score.label)} <span className="font-medium">{score.label}</span>
+                                <Badge variant="secondary" className={`flex items-center gap-1 text-sm ${getSentimentColorClass(score.label)}`}>
+                                  {getSentimentIcon(score.label)} <span className="font-medium text-body">{score.label}</span>
                                 </Badge>
                               </div>
                               <div className="flex items-center gap-3">
                                 <span className="w-12 text-sm text-muted-foreground">{(score.score * 100).toFixed(1)}%</span>
-                                <div className="h-2 w-24 rounded-full bg-muted">
+                                <div className="h-3 w-24 bg-muted">
                                   <div
-                                    className={`h-2 rounded-full ${getProgressColorClass(score.score)}`}
+                                    className={`h-3 ${getProgressColorClass(score.score)}`}
                                     style={{ width: `${score.score * 100}%` }}
                                   />
                                 </div>
@@ -295,15 +295,15 @@ export default function TextClassifierPage() {
                           <Heart className="h-5 w-5 text-primary" />
                           Emotional Breakdown
                         </CardTitle>
-                        <CardDescription>Intensity of various emotions detected.</CardDescription>
+                        <CardDescription className="text-body">Intensity of various emotions detected.</CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
                           {results.sentiment.emotions.map((emotion: any, index: number) => (
-                            <div key={index} className="rounded-md border p-3 text-center">
+                            <div key={index} className="border p-4 text-center">
                               <div className="mb-1 text-sm font-medium text-muted-foreground">{emotion.emotion}</div>
                               <div className="mb-2 text-2xl font-bold text-primary">{(emotion.intensity * 100).toFixed(0)}%</div>
-                              <Progress value={emotion.intensity * 100} className="h-2" />
+                              <Progress value={emotion.intensity * 100} className="h-3" />
                             </div>
                           ))}
                         </div>
@@ -320,24 +320,24 @@ export default function TextClassifierPage() {
                           <MessageSquareText className="h-5 w-5 text-primary" />
                           Topic Classification
                         </CardTitle>
-                        <CardDescription>Primary topics and their relevance scores.</CardDescription>
+                        <CardDescription className="text-body">Primary topics and their relevance scores.</CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="mb-6 text-center">
                           <div className="mb-2 text-5xl font-bold text-primary">{results.topic.primary}</div>
-                          <div className="text-muted-foreground">
+                          <div className="text-muted-foreground text-body">
                             Confidence: {(results.topic.confidence * 100).toFixed(1)}%
                           </div>
                         </div>
                         <div className="grid gap-4">
                           {results.topic.categories.map((category: any, index: number) => (
-                            <div key={index} className="flex items-center justify-between rounded-md border p-3">
-                              <span className="font-medium text-muted-foreground">{category.category}</span>
+                            <div key={index} className="flex items-center justify-between border p-3">
+                              <span className="font-medium text-muted-foreground text-body">{category.category}</span>
                               <div className="flex items-center gap-3">
                                 <span className="w-12 text-sm text-muted-foreground">{(category.score * 100).toFixed(1)}%</span>
-                                <div className="h-2 w-24 rounded-full bg-muted">
+                                <div className="h-3 w-24 bg-muted">
                                   <div
-                                    className={`h-2 rounded-full ${getProgressColorClass(category.score)}`}
+                                    className={`h-3 ${getProgressColorClass(category.score)}`}
                                     style={{ width: `${category.score * 100}%` }}
                                   />
                                 </div>
@@ -354,12 +354,12 @@ export default function TextClassifierPage() {
                           <Tags className="h-5 w-5 text-primary" />
                           Key Keywords
                         </CardTitle>
-                        <CardDescription>Extracted keywords from the text.</CardDescription>
+                        <CardDescription className="text-body">Extracted keywords from the text.</CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="flex flex-wrap gap-2">
                           {results.topic.keywords.map((keyword: string, index: number) => (
-                            <Badge key={index} variant="secondary">
+                            <Badge key={index} variant="secondary" className="text-sm">
                               {keyword}
                             </Badge>
                           ))}
@@ -370,39 +370,41 @@ export default function TextClassifierPage() {
                 </TabsContent>
 
                 <TabsContent value="intent" className="mt-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Zap className="h-5 w-5 text-primary" />
-                        Intent Classification
-                      </CardTitle>
-                      <CardDescription>User intent detected from the text.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="mb-6 text-center">
-                        <div className="mb-2 text-5xl font-bold text-primary">{results.intent.primary}</div>
-                        <div className="text-muted-foreground">
-                          Confidence: {(results.intent.confidence * 100).toFixed(1)}%
+                  <div className="space-y-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Zap className="h-5 w-5 text-primary" />
+                          Intent Classification
+                        </CardTitle>
+                        <CardDescription className="text-body">User intent detected from the text.</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="mb-6 text-center">
+                          <div className="mb-2 text-5xl font-bold text-primary">{results.intent.primary}</div>
+                          <div className="text-muted-foreground text-body">
+                            Confidence: {(results.intent.confidence * 100).toFixed(1)}%
+                          </div>
                         </div>
-                      </div>
-                      <div className="grid gap-4">
-                        {results.intent.intents.map((intent: any, index: number) => (
-                          <div key={index} className="flex items-center justify-between rounded-md border p-3">
-                            <span className="font-medium text-muted-foreground">{intent.intent}</span>
-                            <div className="flex items-center gap-3">
-                              <span className="w-12 text-sm text-muted-foreground">{(intent.score * 100).toFixed(1)}%</span>
-                              <div className="h-2 w-24 rounded-full bg-muted">
-                                <div
-                                  className={`h-2 rounded-full ${getProgressColorClass(intent.score)}`}
-                                  style={{ width: `${intent.score * 100}%` }}
-                                />
+                        <div className="grid gap-4">
+                          {results.intent.intents.map((intent: any, index: number) => (
+                            <div key={index} className="flex items-center justify-between border p-3">
+                              <span className="font-medium text-muted-foreground text-body">{intent.intent}</span>
+                              <div className="flex items-center gap-3">
+                                <span className="w-12 text-sm text-muted-foreground">{(intent.score * 100).toFixed(1)}%</span>
+                                <div className="h-3 w-24 bg-muted">
+                                  <div
+                                    className={`h-3 ${getProgressColorClass(intent.score)}`}
+                                    style={{ width: `${intent.score * 100}%` }}
+                                  />
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
                 </TabsContent>
 
                 <TabsContent value="language" className="mt-6">
@@ -413,19 +415,19 @@ export default function TextClassifierPage() {
                           <Languages className="h-5 w-5 text-primary" />
                           Language Detection
                         </CardTitle>
-                        <CardDescription>Detected language and confidence scores.</CardDescription>
+                        <CardDescription className="text-body">Detected language and confidence scores.</CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="mb-6 text-center">
                           <div className="mb-2 text-5xl font-bold text-primary">{results.language.detected}</div>
-                          <div className="text-muted-foreground">
+                          <div className="text-muted-foreground text-body">
                             Confidence: {(results.language.confidence * 100).toFixed(1)}%
                           </div>
                         </div>
                         <div className="grid gap-4">
                           {results.language.alternatives.map((lang: any, index: number) => (
-                            <div key={index} className="flex items-center justify-between rounded-md border p-3">
-                              <span className="font-medium text-muted-foreground">{lang.language}</span>
+                            <div key={index} className="flex items-center justify-between border p-3">
+                              <span className="font-medium text-muted-foreground text-body">{lang.language}</span>
                               <span className="w-12 text-sm text-muted-foreground">{(lang.score * 100).toFixed(1)}%</span>
                             </div>
                           ))}
@@ -439,25 +441,25 @@ export default function TextClassifierPage() {
                           <BookOpenText className="h-5 w-5 text-primary" />
                           Readability Analysis
                         </CardTitle>
-                        <CardDescription>Metrics on text complexity and readability level.</CardDescription>
+                        <CardDescription className="text-body">Metrics on text complexity and readability level.</CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-                          <div className="rounded-md border p-4 text-center">
+                          <div className="border p-4 text-center">
                             <div className="mb-1 text-sm font-medium text-muted-foreground">Score</div>
                             <div className="text-2xl font-bold text-primary">{results.readability.score}</div>
                           </div>
-                          <div className="rounded-md border p-4 text-center">
+                          <div className="border p-4 text-center">
                             <div className="mb-1 text-sm font-medium text-muted-foreground">Sentences</div>
                             <div className="text-2xl font-bold text-primary">
                               {results.readability.metrics.sentences}
                             </div>
                           </div>
-                          <div className="rounded-md border p-4 text-center">
+                          <div className="border p-4 text-center">
                             <div className="mb-1 text-sm font-medium text-muted-foreground">Words</div>
                             <div className="text-2xl font-bold text-primary">{results.readability.metrics.words}</div>
                           </div>
-                          <div className="rounded-md border p-4 text-center">
+                          <div className="border p-4 text-center">
                             <div className="mb-1 text-sm font-medium text-muted-foreground">Avg Words/Sentence</div>
                             <div className="text-2xl font-bold text-primary">
                               {results.readability.metrics.avgWordsPerSentence}
@@ -465,7 +467,7 @@ export default function TextClassifierPage() {
                           </div>
                         </div>
                         <div className="text-center">
-                          <Badge variant="secondary" className="text-primary">
+                          <Badge variant="secondary" className="text-primary text-sm">
                             {results.readability.level}
                           </Badge>
                         </div>

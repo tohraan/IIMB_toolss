@@ -130,9 +130,9 @@ export default function ResearchSummarizerPage() {
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <div className="space-y-2">
-                    <h3 className="text-sm font-medium">Summary Length</h3>
+                    <h3 className="text-body font-medium">Summary Length</h3>
                     <Select value={summaryLength} onValueChange={(value: "short" | "medium" | "detailed") => setSummaryLength(value)}>
-                      <SelectTrigger>
+                      <SelectTrigger className="text-body">
                         <SelectValue placeholder="Select length" />
                       </SelectTrigger>
                       <SelectContent>
@@ -143,9 +143,9 @@ export default function ResearchSummarizerPage() {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <h3 className="text-sm font-medium">Focus Areas</h3>
+                    <h3 className="text-body font-medium">Focus Areas</h3>
                     <Select value={focusArea.join(",")} onValueChange={(value) => setFocusArea(value.split(","))} multiple>
-                      <SelectTrigger>
+                      <SelectTrigger className="text-body">
                         <SelectValue placeholder="Select focus areas" />
                       </SelectTrigger>
                       <SelectContent>
@@ -168,11 +168,11 @@ export default function ResearchSummarizerPage() {
           )}
 
           {step === 2 && (
-            <Card className="flex h-[300px] items-center justify-center">
-              <CardContent className="text-center">
-                <div className="h-12 w-12 animate-spin border-b-2 border-primary mx-auto mb-4" />
-                <h3 className="text-xl font-semibold">Analyzing Research</h3>
-                <p className="text-muted-foreground">AI is processing and summarizing your research content...</p>
+            <Card className="flex h-[350px] items-center justify-center">
+              <CardContent className="text-center space-y-4">
+                <div className="h-16 w-16 animate-spin border-4 border-primary border-t-transparent mx-auto" />
+                <h3 className="text-h3 font-semibold">Analyzing Research</h3>
+                <p className="text-muted-foreground text-body">AI is processing and summarizing your research content...</p>
               </CardContent>
             </Card>
           )}
@@ -203,21 +203,21 @@ export default function ResearchSummarizerPage() {
                       {summary.wordCount.reduction} reduction
                     </Badge>
                   </div>
-                  <p className="leading-relaxed text-muted-foreground/80">{summary.mainSummary}</p>
+                  <p className="leading-relaxed text-muted-foreground/80 text-body">{summary.mainSummary}</p>
                 </CardContent>
               </Card>
 
               {focusArea.includes("keyFindings") && summary.keyFindings?.length > 0 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Key Findings</CardTitle>
+                    <CardTitle className="text-h3">Key Findings</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2">
                       {summary.keyFindings.map((finding: string, index: number) => (
                         <li key={index} className="flex items-start gap-3">
-                          <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
-                          <span className="text-muted-foreground/80">{finding}</span>
+                          <div className="w-2 h-2 bg-primary mt-2 flex-shrink-0" />
+                          <span className="text-muted-foreground/80 text-body">{finding}</span>
                         </li>
                       ))}
                     </ul>
@@ -228,10 +228,10 @@ export default function ResearchSummarizerPage() {
               {focusArea.includes("methodology") && summary.methodology && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Methodology</CardTitle>
+                    <CardTitle className="text-h3">Methodology</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground/80">{summary.methodology}</p>
+                    <p className="text-body text-muted-foreground/80">{summary.methodology}</p>
                   </CardContent>
                 </Card>
               )}
@@ -239,12 +239,12 @@ export default function ResearchSummarizerPage() {
               {focusArea.includes("implications") && summary.implications?.length > 0 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Implications</CardTitle>
+                    <CardTitle className="text-h3">Implications</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-1">
                       {summary.implications.map((implication: string, index: number) => (
-                        <li key={index} className="text-sm text-muted-foreground/80 flex items-start gap-2">
+                        <li key={index} className="text-body text-muted-foreground/80 flex items-start gap-2">
                           <span className="text-primary">•</span>
                           {implication}
                         </li>
@@ -257,12 +257,12 @@ export default function ResearchSummarizerPage() {
               {focusArea.includes("limitations") && summary.limitations?.length > 0 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Limitations</CardTitle>
+                    <CardTitle className="text-h3">Limitations</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-1">
                       {summary.limitations.map((limitation: string, index: number) => (
-                        <li key={index} className="text-sm text-muted-foreground/80 flex items-start gap-2">
+                        <li key={index} className="text-body text-muted-foreground/80 flex items-start gap-2">
                           <span className="text-destructive">•</span>
                           {limitation}
                         </li>
@@ -275,12 +275,12 @@ export default function ResearchSummarizerPage() {
               {focusArea.includes("futureResearch") && summary.futureResearch?.length > 0 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Future Research</CardTitle>
+                    <CardTitle className="text-h3">Future Research</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-1">
                       {summary.futureResearch.map((research: string, index: number) => (
-                        <li key={index} className="text-sm text-muted-foreground/80 flex items-start gap-2">
+                        <li key={index} className="text-body text-muted-foreground/80 flex items-start gap-2">
                           <span className="text-secondary">•</span>
                           {research}
                         </li>

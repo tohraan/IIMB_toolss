@@ -90,8 +90,8 @@ export default function CompetitorSnapshotPage() {
       <div className="flex flex-1 flex-col gap-8 p-6 md:p-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Competitor Snapshot</h1>
-            <p className="text-muted-foreground">Generate a concise overview of your competitive landscape with AI insights.</p>
+            <h1 className="text-h1 font-bold">Competitor Snapshot</h1>
+            <p className="text-muted-foreground text-body">Generate a concise overview of your competitive landscape with AI insights.</p>
           </div>
         </div>
 
@@ -104,11 +104,11 @@ export default function CompetitorSnapshotPage() {
                     <Building className="h-5 w-5 text-primary" />
                     Company & Competitor Details
                   </CardTitle>
-                  <CardDescription>Provide information about your company and key competitors.</CardDescription>
+                  <CardDescription className="text-body">Provide information about your company and key competitors.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="company-name">Your Company Name</Label>
+                    <Label htmlFor="company-name" className="text-body">Your Company Name</Label>
                     <Input
                       id="company-name"
                       placeholder="e.g., Triaxon AI"
@@ -117,7 +117,7 @@ export default function CompetitorSnapshotPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="competitor-names">Competitor Names (comma-separated)</Label>
+                    <Label htmlFor="competitor-names" className="text-body">Competitor Names (comma-separated)</Label>
                     <Input
                       id="competitor-names"
                       placeholder="e.g., InnovateAI, DataSynth, AnalyticsFlow"
@@ -126,7 +126,7 @@ export default function CompetitorSnapshotPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="industry">Industry</Label>
+                    <Label htmlFor="industry" className="text-body">Industry</Label>
                     <Input
                       id="industry"
                       placeholder="e.g., AI Business Intelligence"
@@ -154,11 +154,11 @@ export default function CompetitorSnapshotPage() {
           )}
 
           {step === 2 && (
-            <Card className="flex h-[300px] items-center justify-center">
-              <CardContent className="text-center">
-                <div className="h-12 w-12 animate-spin border-b-2 border-primary mx-auto mb-4" />
-                <h3 className="text-xl font-semibold">Analyzing Competitors</h3>
-                <p className="text-muted-foreground">AI is gathering information and generating your competitive snapshot...</p>
+            <Card className="flex h-[350px] items-center justify-center">
+              <CardContent className="text-center space-y-4">
+                <div className="h-16 w-16 animate-spin border-4 border-primary border-t-transparent mx-auto" />
+                <h3 className="text-h3 font-semibold">Analyzing Competitors</h3>
+                <p className="text-muted-foreground text-body">AI is gathering information and generating your competitive snapshot...</p>
               </CardContent>
             </Card>
           )}
@@ -171,20 +171,20 @@ export default function CompetitorSnapshotPage() {
                     <Building className="h-5 w-5 text-primary" />
                     Your Company Overview
                   </CardTitle>
-                  <CardDescription>Details about your company and its position.</CardDescription>
+                  <CardDescription className="text-body">Details about your company and its position.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Company Name:</span>
-                    <span className="font-medium">{snapshotResults.yourCompany.name}</span>
+                    <span className="text-muted-foreground text-body">Company Name:</span>
+                    <span className="font-medium text-body">{snapshotResults.yourCompany.name}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Industry:</span>
-                    <span className="font-medium">{snapshotResults.yourCompany.industry}</span>
+                    <span className="text-muted-foreground text-body">Industry:</span>
+                    <span className="font-medium text-body">{snapshotResults.yourCompany.industry}</span>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-medium">Description:</p>
-                    <p className="text-muted-foreground text-sm">{snapshotResults.yourCompany.description}</p>
+                    <p className="text-body font-medium">Description:</p>
+                    <p className="text-muted-foreground text-body">{snapshotResults.yourCompany.description}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -194,38 +194,38 @@ export default function CompetitorSnapshotPage() {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Users className="h-5 w-5 text-primary" />
-                      {competitor.name}
+                      <span className="text-h3">{competitor.name}</span>
                     </CardTitle>
-                    <CardDescription>{competitor.overview}</CardDescription>
+                    <CardDescription className="text-body">{competitor.overview}</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
-                      <h3 className="text-sm font-medium mb-2">Strengths:</h3>
+                      <h3 className="text-body font-medium mb-2">Strengths:</h3>
                       <ul className="space-y-1">
                         {competitor.strengths.map((strength: string, sIndex: number) => (
-                          <li key={sIndex} className="flex items-start gap-2 text-sm text-muted-foreground">
-                            <ShieldCheck className="h-4 w-4 flex-shrink-0 text-green-500 mt-0.5" />
+                          <li key={sIndex} className="flex items-start gap-2 text-body text-muted-foreground">
+                            <ShieldCheck className="h-5 w-5 flex-shrink-0 text-green-500 mt-0.5" />
                             {strength}
                           </li>
                         ))}
                       </ul>
                     </div>
                     <div>
-                      <h3 className="text-sm font-medium mb-2">Weaknesses:</h3>
+                      <h3 className="text-body font-medium mb-2">Weaknesses:</h3>
                       <ul className="space-y-1">
                         {competitor.weaknesses.map((weakness: string, wIndex: number) => (
-                          <li key={wIndex} className="flex items-start gap-2 text-sm text-muted-foreground">
-                            <XCircle className="h-4 w-4 flex-shrink-0 text-destructive mt-0.5" />
+                          <li key={wIndex} className="flex items-start gap-2 text-body text-muted-foreground">
+                            <XCircle className="h-5 w-5 flex-shrink-0 text-destructive mt-0.5" />
                             {weakness}
                           </li>
                         ))}
                       </ul>
                     </div>
                     <div className="space-y-1">
-                      <h3 className="text-sm font-medium">Strategy:</h3>
-                      <p className="text-muted-foreground text-sm">{competitor.strategy}</p>
+                      <h3 className="text-body font-medium">Strategy:</h3>
+                      <p className="text-muted-foreground text-body">{competitor.strategy}</p>
                     </div>
-                    <div className="flex justify-between items-center text-sm text-muted-foreground">
+                    <div className="flex justify-between items-center text-body text-muted-foreground">
                       <span>Market Share: <span className="font-medium text-primary">{competitor.marketShare}</span></span>
                       <span>Sentiment: <span className="font-medium text-primary">{competitor.sentiment}</span></span>
                     </div>
@@ -239,13 +239,13 @@ export default function CompetitorSnapshotPage() {
                     <TrendingUp className="h-5 w-5 text-primary" />
                     Market Trends
                   </CardTitle>
-                  <CardDescription>Key trends influencing your industry and competitive landscape.</CardDescription>
+                  <CardDescription className="text-body">Key trends influencing your industry and competitive landscape.</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3">
                     {snapshotResults.marketTrends.map((trend: string, index: number) => (
-                      <li key={index} className="flex items-start gap-3 border p-3 text-sm text-muted-foreground">
-                        <Star className="h-4 w-4 flex-shrink-0 text-primary mt-0.5" />
+                      <li key={index} className="flex items-start gap-3 border p-3 text-body text-muted-foreground">
+                        <Star className="h-5 w-5 flex-shrink-0 text-primary mt-0.5" />
                         {trend}
                       </li>
                     ))}
@@ -259,13 +259,13 @@ export default function CompetitorSnapshotPage() {
                     <Lightbulb className="h-5 w-5 text-primary" />
                     Strategic Insights
                   </CardTitle>
-                  <CardDescription>Actionable insights derived from the competitive analysis.</CardDescription>
+                  <CardDescription className="text-body">Actionable insights derived from the competitive analysis.</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3">
                     {snapshotResults.strategicInsights.map((insight: string, index: number) => (
-                      <li key={index} className="flex items-start gap-3 border p-3 text-sm text-muted-foreground">
-                        <ShieldCheck className="h-4 w-4 flex-shrink-0 text-primary mt-0.5" />
+                      <li key={index} className="flex items-start gap-3 border p-3 text-body text-muted-foreground">
+                        <ShieldCheck className="h-5 w-5 flex-shrink-0 text-primary mt-0.5" />
                         {insight}
                       </li>
                     ))}
